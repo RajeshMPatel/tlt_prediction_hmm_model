@@ -45,6 +45,7 @@ Pipeline output includes:
 - `reports/daily/status.json`
 - Regime charts in `reports/charts/`
 - Processed datasets in `data/processed/`
+- Out-of-sample backtest metrics (time-series splits) under `latest_probabilities.json -> backtest`
 
 ## Run web app
 

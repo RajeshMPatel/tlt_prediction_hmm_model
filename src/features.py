@@ -14,9 +14,13 @@ def build_feature_dataset(raw_df: pd.DataFrame, cfg: dict[str, Any]) -> pd.DataF
     vol_window = int(cfg["features"]["realized_vol_window"])
 
     df = raw_df.copy().sort_index()
+    tlt_close_ffill = df["tlt_close"].ffill()
+    vix_close_ffill = df["vix_close"].ffill()
 
-    df["tlt_return"] = df["tlt_close"].pct_change()
-    df["vix_return"] = df["vix_close"].pct_change()
+    # Use forward-filled closes so weekend/holiday gaps do not invalidate
+    # the next trading day's return and rolling volatility features.
+    df["tlt_return"] = tlt_close_ffill.pct_change()
+    df["vix_return"] = vix_close_ffill.pct_change()
     df[f"realized_vol_{vol_window}d"] = df["tlt_return"].rolling(vol_window).std() * np.sqrt(252)
 
     # FRED DGS10 is in percentage points; differencing captures daily rate change.
@@ -40,7 +44,7 @@ def build_feature_dataset(raw_df: pd.DataFrame, cfg: dict[str, Any]) -> pd.DataF
         # Optional global yields may be unavailable; use a neutral default.
         df["global_yield_change_mean"] = 0.0
 
-    df["tlt_forward_h5_return"] = df["tlt_close"].pct_change(horizon).shift(-horizon)
-    df["vix_forward_h5_return"] = df["vix_close"].pct_change(horizon).shift(-horizon)
+    df["tlt_forward_h5_return"] = tlt_close_ffill.pct_change(horizon).shift(-horizon)
+    df["vix_forward_h5_return"] = vix_close_ffill.pct_change(horizon).shift(-horizon)
 
     return df

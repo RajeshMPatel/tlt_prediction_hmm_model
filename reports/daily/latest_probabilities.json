@@ -1,19 +1,77 @@
 {
-  "date": "2025-11-26",
+  "date": "2026-02-12",
   "horizon_days": 5,
+  "train_window_end": "2026-02-06",
+  "latest_row_has_h5_label": false,
+  "train_rows": 4545,
+  "score_rows": 4549,
   "probabilities": {
-    "tlt_up_h5": 0.5350278257677875,
-    "tlt_down_h5": 0.4649721742322125,
-    "vix_up_h5": 0.46623025963113207,
-    "vix_down_h5": 0.5337697403688679
+    "tlt_up_h5": 0.5429931261917245,
+    "tlt_down_h5": 0.45700687380827554,
+    "vix_up_h5": 0.47530178960303954,
+    "vix_down_h5": 0.5246982103969604
   },
   "regime_probabilities": {
-    "regime_0": 2.272479239300703e-11,
-    "regime_1": 3.8057808579192457e-26,
-    "regime_2": 0.9999999999772752
+    "regime_0": 0.004922848349898747,
+    "regime_1": 0.9948197563933219,
+    "regime_2": 0.0002573952567793233
   },
-  "most_likely_regime": "regime_2",
-  "generated_at_utc": "2026-02-14T06:52:28Z",
+  "most_likely_regime": "regime_1",
+  "backtest": {
+    "enabled": true,
+    "status": "ok",
+    "n_splits": 5,
+    "min_train_rows": 500,
+    "oos_rows": 3785,
+    "tlt": {
+      "hit_rate": 0.5165125495376486,
+      "brier_score": 0.250337078766664,
+      "log_loss": 0.6938400049134757
+    },
+    "vix": {
+      "hit_rate": 0.5408190224570674,
+      "brier_score": 0.24811195293553334,
+      "log_loss": 0.6893620601464635
+    },
+    "folds": [
+      {
+        "fold": 1,
+        "train_rows": 760,
+        "test_rows": 757,
+        "test_start": "2010-04-05",
+        "test_end": "2013-05-31"
+      },
+      {
+        "fold": 2,
+        "train_rows": 1517,
+        "test_rows": 757,
+        "test_start": "2013-06-03",
+        "test_end": "2016-07-28"
+      },
+      {
+        "fold": 3,
+        "train_rows": 2274,
+        "test_rows": 757,
+        "test_start": "2016-07-29",
+        "test_end": "2019-09-26"
+      },
+      {
+        "fold": 4,
+        "train_rows": 3031,
+        "test_rows": 757,
+        "test_start": "2019-09-27",
+        "test_end": "2022-11-29"
+      },
+      {
+        "fold": 5,
+        "train_rows": 3788,
+        "test_rows": 757,
+        "test_start": "2022-11-30",
+        "test_end": "2026-02-06"
+      }
+    ]
+  },
+  "generated_at_utc": "2026-02-14T07:41:12Z",
   "last_data_update": "2026-02-13 00:00:00",
   "charts": {
     "tlt_chart": "/Users/rajeshpatel/dev/stocks/tlt_vix_web/reports/charts/tlt_regime_chart.png",

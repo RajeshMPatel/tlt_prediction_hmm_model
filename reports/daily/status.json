@@ -1,8 +1,8 @@
 {
-  "generated_at_utc": "2026-02-14T06:52:28Z",
+  "generated_at_utc": "2026-02-14T07:41:12Z",
   "last_data_timestamp": "2026-02-13 00:00:00",
   "raw_rows": 4990,
-  "model_rows": 1669,
+  "model_rows": 4549,
   "warnings": [
     "JAPAN10Y placeholder is empty; filling with NaN.",
     "GERMANY10Y placeholder is empty; filling with NaN.",

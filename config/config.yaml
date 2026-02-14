@@ -60,6 +60,8 @@ model:
   covariance_type: full
   n_iter: 500
   random_state: 42
+  backtest_splits: 5
+  backtest_min_train_rows: 500
   smoothing:
     enabled: true
     span: 3
