@@ -120,6 +120,26 @@ def _log_loss(prob: np.ndarray, target: np.ndarray) -> float:
     return float(-np.mean(target * np.log(clipped) + (1.0 - target) * np.log(1.0 - clipped)))
 
 
+def _confidence_bucket_stats(prob: np.ndarray, target: np.ndarray) -> dict[str, Any]:
+    """Compute hit-rate/coverage for stronger-confidence subsets."""
+    out: dict[str, Any] = {}
+    for threshold in [0.55, 0.60, 0.65]:
+        mask = np.maximum(prob, 1.0 - prob) >= threshold
+        key = f"ge_{threshold:.2f}"
+        if not np.any(mask):
+            out[key] = {"coverage": 0.0, "rows": 0, "hit_rate": None}
+            continue
+        prob_sel = prob[mask]
+        target_sel = target[mask]
+        hit = np.mean((prob_sel >= 0.5) == (target_sel == 1.0))
+        out[key] = {
+            "coverage": float(np.mean(mask)),
+            "rows": int(np.sum(mask)),
+            "hit_rate": float(hit),
+        }
+    return out
+
+
 def _run_time_series_backtest(
     labeled_df: pd.DataFrame,
     feature_cols: list[str],
@@ -212,11 +232,13 @@ def _run_time_series_backtest(
             "hit_rate": float(np.mean((tlt_prob_arr >= 0.5) == (tlt_act_arr == 1.0))),
             "brier_score": _brier_score(tlt_prob_arr, tlt_act_arr),
             "log_loss": _log_loss(tlt_prob_arr, tlt_act_arr),
+            "confidence_buckets": _confidence_bucket_stats(tlt_prob_arr, tlt_act_arr),
         },
         "vix": {
             "hit_rate": float(np.mean((vix_prob_arr >= 0.5) == (vix_act_arr == 1.0))),
             "brier_score": _brier_score(vix_prob_arr, vix_act_arr),
             "log_loss": _log_loss(vix_prob_arr, vix_act_arr),
+            "confidence_buckets": _confidence_bucket_stats(vix_prob_arr, vix_act_arr),
         },
         "folds": fold_summaries,
     }
@@ -289,6 +311,16 @@ def run_hmm_direction_model(feature_df: pd.DataFrame, cfg: dict[str, Any]) -> HM
         },
         "regime_probabilities": {col: float(latest_posterior[col]) for col in posterior_cols},
         "most_likely_regime": str(model_frame.loc[latest_idx, "most_likely_regime"]),
+        "market_context": {
+            "tlt_close": float(model_frame.loc[latest_idx, "tlt_close"]),
+            "vix_close": float(model_frame.loc[latest_idx, "vix_close"]),
+            "tlt_20d_min_close": float(model_frame.loc[latest_idx, "tlt_20d_min_close"]),
+            "tlt_20d_max_close": float(model_frame.loc[latest_idx, "tlt_20d_max_close"]),
+            "vix_20d_min_close": float(model_frame.loc[latest_idx, "vix_20d_min_close"]),
+            "vix_20d_max_close": float(model_frame.loc[latest_idx, "vix_20d_max_close"]),
+            "tlt_trend_gap_20": float(model_frame.loc[latest_idx, "tlt_trend_gap_20"]),
+            "vix_trend_gap_20": float(model_frame.loc[latest_idx, "vix_trend_gap_20"]),
+        },
         "backtest": backtest,
     }
 

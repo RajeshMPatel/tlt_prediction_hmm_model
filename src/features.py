@@ -23,6 +23,31 @@ def build_feature_dataset(raw_df: pd.DataFrame, cfg: dict[str, Any]) -> pd.DataF
     df["vix_return"] = vix_close_ffill.pct_change()
     df[f"realized_vol_{vol_window}d"] = df["tlt_return"].rolling(vol_window).std() * np.sqrt(252)
 
+    # Trend and channel-style features.
+    df["tlt_mom_5"] = tlt_close_ffill.pct_change(5)
+    df["tlt_mom_20"] = tlt_close_ffill.pct_change(20)
+    df["vix_mom_5"] = vix_close_ffill.pct_change(5)
+    df["vix_mom_20"] = vix_close_ffill.pct_change(20)
+
+    tlt_ma_20 = tlt_close_ffill.rolling(20).mean()
+    vix_ma_20 = vix_close_ffill.rolling(20).mean()
+    df["tlt_trend_gap_20"] = (tlt_close_ffill / tlt_ma_20) - 1.0
+    df["vix_trend_gap_20"] = (vix_close_ffill / vix_ma_20) - 1.0
+
+    tlt_min_20 = tlt_close_ffill.rolling(20).min()
+    tlt_max_20 = tlt_close_ffill.rolling(20).max()
+    vix_min_20 = vix_close_ffill.rolling(20).min()
+    vix_max_20 = vix_close_ffill.rolling(20).max()
+    eps = 1e-12
+    df["tlt_channel_pos_20"] = (tlt_close_ffill - tlt_min_20) / (tlt_max_20 - tlt_min_20 + eps)
+    df["vix_channel_pos_20"] = (vix_close_ffill - vix_min_20) / (vix_max_20 - vix_min_20 + eps)
+
+    # Expose recent rolling min/max in outputs for context.
+    df["tlt_20d_min_close"] = tlt_min_20
+    df["tlt_20d_max_close"] = tlt_max_20
+    df["vix_20d_min_close"] = vix_min_20
+    df["vix_20d_max_close"] = vix_max_20
+
     # FRED DGS10 is in percentage points; differencing captures daily rate change.
     df["us10y_change"] = df["DGS10"].diff()
 

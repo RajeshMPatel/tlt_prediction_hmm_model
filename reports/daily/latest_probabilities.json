@@ -6,17 +6,27 @@
   "train_rows": 4545,
   "score_rows": 4549,
   "probabilities": {
-    "tlt_up_h5": 0.5429931261917245,
-    "tlt_down_h5": 0.45700687380827554,
-    "vix_up_h5": 0.47530178960303954,
-    "vix_down_h5": 0.5246982103969604
+    "tlt_up_h5": 0.5350036453458059,
+    "tlt_down_h5": 0.4649963546541941,
+    "vix_up_h5": 0.4674118034816326,
+    "vix_down_h5": 0.5325881965183674
   },
   "regime_probabilities": {
-    "regime_0": 0.004922848349898747,
-    "regime_1": 0.9948197563933219,
-    "regime_2": 0.0002573952567793233
+    "regime_0": 0.9853885643562815,
+    "regime_1": 9.78732795182025e-06,
+    "regime_2": 0.014601648315766637
   },
-  "most_likely_regime": "regime_1",
+  "most_likely_regime": "regime_0",
+  "market_context": {
+    "tlt_close": 89.23,
+    "vix_close": 20.81999969482422,
+    "tlt_20d_min_close": 86.31983184814453,
+    "tlt_20d_max_close": 89.23,
+    "vix_20d_min_close": 15.640000343322754,
+    "vix_20d_max_close": 21.770000457763672,
+    "tlt_trend_gap_20": 0.02081091168549576,
+    "vix_trend_gap_20": 0.18177945882968238
+  },
   "backtest": {
     "enabled": true,
     "status": "ok",
@@ -24,14 +34,48 @@
     "min_train_rows": 500,
     "oos_rows": 3785,
     "tlt": {
-      "hit_rate": 0.5165125495376486,
-      "brier_score": 0.250337078766664,
-      "log_loss": 0.6938400049134757
+      "hit_rate": 0.5276089828269485,
+      "brier_score": 0.24940784104652497,
+      "log_loss": 0.6919691694474287,
+      "confidence_buckets": {
+        "ge_0.55": {
+          "coverage": 0.5159841479524439,
+          "rows": 1953,
+          "hit_rate": 0.5442908346134152
+        },
+        "ge_0.60": {
+          "coverage": 0.0,
+          "rows": 0,
+          "hit_rate": null
+        },
+        "ge_0.65": {
+          "coverage": 0.0,
+          "rows": 0,
+          "hit_rate": null
+        }
+      }
     },
     "vix": {
-      "hit_rate": 0.5408190224570674,
-      "brier_score": 0.24811195293553334,
-      "log_loss": 0.6893620601464635
+      "hit_rate": 0.5519154557463672,
+      "brier_score": 0.24652733321620188,
+      "log_loss": 0.6861465391701111,
+      "confidence_buckets": {
+        "ge_0.55": {
+          "coverage": 0.34187582562747687,
+          "rows": 1294,
+          "hit_rate": 0.5811437403400309
+        },
+        "ge_0.60": {
+          "coverage": 0.08031704095112285,
+          "rows": 304,
+          "hit_rate": 0.6907894736842105
+        },
+        "ge_0.65": {
+          "coverage": 0.0,
+          "rows": 0,
+          "hit_rate": null
+        }
+      }
     },
     "folds": [
       {
@@ -71,7 +115,7 @@
       }
     ]
   },
-  "generated_at_utc": "2026-02-14T07:41:12Z",
+  "generated_at_utc": "2026-02-14T07:53:51Z",
   "last_data_update": "2026-02-13 00:00:00",
   "charts": {
     "tlt_chart": "/Users/rajeshpatel/dev/stocks/tlt_vix_web/reports/charts/tlt_regime_chart.png",

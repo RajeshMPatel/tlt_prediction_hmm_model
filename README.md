@@ -46,6 +46,7 @@ Pipeline output includes:
 - Regime charts in `reports/charts/`
 - Processed datasets in `data/processed/`
 - Out-of-sample backtest metrics (time-series splits) under `latest_probabilities.json -> backtest`
+- Confidence-bucket accuracy (`>=0.55`, `>=0.60`, `>=0.65`) under `backtest -> tlt/vix -> confidence_buckets`
 
 ## Run web app
 

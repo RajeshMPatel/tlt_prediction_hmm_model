@@ -51,6 +51,14 @@ features:
     - tlt_return
     - vix_return
     - realized_vol_20d
+    - tlt_mom_5
+    - tlt_mom_20
+    - vix_mom_5
+    - vix_mom_20
+    - tlt_trend_gap_20
+    - vix_trend_gap_20
+    - tlt_channel_pos_20
+    - vix_channel_pos_20
     - us10y_change
     - curve_slope
     - global_yield_change_mean
