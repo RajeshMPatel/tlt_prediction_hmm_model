@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TLT / VIX H5 Today Card</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 24px; background: #f6f8fb; color: #1f2937; }
+    .card { background: #fff; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,.08); padding: 20px; max-width: 980px; }
+    h1 { margin-top: 0; }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(220px, 1fr)); gap: 12px; }
+    .tile { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 12px; }
+    .k { font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: .04em; margin-bottom: 6px; }
+    .v { font-size: 24px; font-weight: 700; }
+    .muted { color: #6b7280; }
+    ul { margin-top: 8px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>TLT / VIX H5 Probabilities</h1>
+    {% if has_data %}
+      <p class="muted">Date: <strong>{{ payload.date }}</strong></p>
+      <div class="grid">
+        <div class="tile"><div class="k">P(TLT up H5)</div><div class="v">{{ "%.2f%%"|format(payload.probabilities.tlt_up_h5 * 100) }}</div></div>
+        <div class="tile"><div class="k">P(TLT down H5)</div><div class="v">{{ "%.2f%%"|format(payload.probabilities.tlt_down_h5 * 100) }}</div></div>
+        <div class="tile"><div class="k">P(VIX up H5)</div><div class="v">{{ "%.2f%%"|format(payload.probabilities.vix_up_h5 * 100) }}</div></div>
+        <div class="tile"><div class="k">P(VIX down H5)</div><div class="v">{{ "%.2f%%"|format(payload.probabilities.vix_down_h5 * 100) }}</div></div>
+      </div>
+
+      <h3>Regime Probabilities</h3>
+      <ul>
+      {% for k, v in payload.regime_probabilities.items() %}
+        <li>{{ k }}: {{ "%.2f%%"|format(v * 100) }}</li>
+      {% endfor %}
+      </ul>
+
+      <p class="muted">Most likely regime: <strong>{{ payload.most_likely_regime }}</strong></p>
+      <p class="muted">Last data update: <strong>{{ payload.last_data_update }}</strong></p>
+      <p class="muted">Generated at (UTC): <strong>{{ payload.generated_at_utc }}</strong></p>
+      <p><a href="/status">View status/debug page</a></p>
+    {% else %}
+      <p>No daily probabilities found yet. Run <code>bash scripts/run_pipeline.sh</code>.</p>
+    {% endif %}
+  </div>
+</body>
+</html>

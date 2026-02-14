@@ -1,0 +1,131 @@
+{
+  "generated_at_utc": "2026-02-14T06:52:28Z",
+  "last_data_timestamp": "2026-02-13 00:00:00",
+  "raw_rows": 4990,
+  "model_rows": 1669,
+  "warnings": [
+    "JAPAN10Y placeholder is empty; filling with NaN.",
+    "GERMANY10Y placeholder is empty; filling with NaN.",
+    "UK10Y placeholder is empty; filling with NaN."
+  ],
+  "sources": {
+    "tlt": {
+      "source": "download+cache",
+      "symbol": "TLT",
+      "path": "/Users/rajeshpatel/dev/stocks/tlt_vix_web/data/raw/tlt_close.parquet",
+      "download_meta": {
+        "attempts": 5,
+        "strategy": "stooq",
+        "attempt_details": [
+          {
+            "attempt": 1,
+            "status": "error",
+            "error": "HTTP Error 429: Too Many Requests"
+          },
+          {
+            "attempt": 2,
+            "status": "error",
+            "error": "HTTP Error 429: Too Many Requests"
+          },
+          {
+            "attempt": 3,
+            "status": "error",
+            "error": "HTTP Error 429: Too Many Requests"
+          },
+          {
+            "attempt": 4,
+            "status": "error",
+            "error": "HTTP Error 429: Too Many Requests"
+          },
+          {
+            "attempt": 5,
+            "status": "error",
+            "error": "HTTP Error 429: Too Many Requests"
+          }
+        ],
+        "error": "HTTP Error 429: Too Many Requests",
+        "stooq_symbol": "tlt.us"
+      }
+    },
+    "vix": {
+      "source": "cache",
+      "symbol": "^VIX",
+      "download_meta": {
+        "attempts": 5,
+        "strategy": "failed",
+        "attempt_details": [
+          {
+            "attempt": 1,
+            "status": "error",
+            "error": "HTTP Error 429: Too Many Requests"
+          },
+          {
+            "attempt": 2,
+            "status": "error",
+            "error": "HTTP Error 429: Too Many Requests"
+          },
+          {
+            "attempt": 3,
+            "status": "error",
+            "error": "HTTP Error 429: Too Many Requests"
+          },
+          {
+            "attempt": 4,
+            "status": "error",
+            "error": "HTTP Error 429: Too Many Requests"
+          },
+          {
+            "attempt": 5,
+            "status": "error",
+            "error": "HTTP Error 429: Too Many Requests"
+          }
+        ],
+        "error": "HTTP Error 429: Too Many Requests",
+        "stooq_error": "No columns to parse from file"
+      }
+    },
+    "fred": {
+      "path": "/Users/rajeshpatel/dev/stocks/tlt_vix_web/data/raw/fred_series.parquet",
+      "series": {
+        "DGS2": {
+          "series_id": "DGS2",
+          "status": "ok"
+        },
+        "DGS10": {
+          "series_id": "DGS10",
+          "status": "ok"
+        },
+        "DGS20": {
+          "series_id": "DGS20",
+          "status": "ok"
+        },
+        "DGS30": {
+          "series_id": "DGS30",
+          "status": "ok"
+        },
+        "T10Y2Y": {
+          "series_id": "T10Y2Y",
+          "status": "ok"
+        },
+        "VIXCLS": {
+          "series_id": "VIXCLS",
+          "status": "ok"
+        }
+      },
+      "warnings": [
+        "JAPAN10Y placeholder is empty; filling with NaN.",
+        "GERMANY10Y placeholder is empty; filling with NaN.",
+        "UK10Y placeholder is empty; filling with NaN."
+      ]
+    },
+    "last_timestamp": "2026-02-13 00:00:00",
+    "rows": 4990
+  },
+  "debug": {
+    "feature_path": "/Users/rajeshpatel/dev/stocks/tlt_vix_web/data/processed/feature_dataset.parquet",
+    "model_path": "/Users/rajeshpatel/dev/stocks/tlt_vix_web/data/processed/model_dataset.parquet",
+    "posterior_path": "/Users/rajeshpatel/dev/stocks/tlt_vix_web/data/processed/posterior_probabilities.parquet",
+    "regime_up_path": "/Users/rajeshpatel/dev/stocks/tlt_vix_web/data/processed/regime_up_frequencies.parquet",
+    "force_refresh": false
+  }
+}

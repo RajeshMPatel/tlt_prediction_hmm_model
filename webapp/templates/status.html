@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pipeline Status</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 24px; background: #f6f8fb; color: #1f2937; }
+    .card { background: #fff; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,.08); padding: 20px; max-width: 980px; }
+    pre { background: #111827; color: #f9fafb; padding: 12px; border-radius: 8px; overflow: auto; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Data Freshness and Debug</h1>
+    {% if has_data %}
+      <p>Last data timestamp: <strong>{{ payload.last_data_timestamp }}</strong></p>
+      <p>Generated at (UTC): <strong>{{ payload.generated_at_utc }}</strong></p>
+      <p>Raw rows: <strong>{{ payload.raw_rows }}</strong></p>
+      <p>Model rows: <strong>{{ payload.model_rows }}</strong></p>
+      <h3>Warnings</h3>
+      <pre>{{ payload.warnings | tojson(indent=2) }}</pre>
+      <h3>Sources</h3>
+      <pre>{{ payload.sources | tojson(indent=2) }}</pre>
+      <h3>Debug</h3>
+      <pre>{{ payload.debug | tojson(indent=2) }}</pre>
+    {% else %}
+      <p>No status output found yet. Run <code>bash scripts/run_pipeline.sh</code>.</p>
+    {% endif %}
+    <p><a href="/">Back to today card</a></p>
+  </div>
+</body>
+</html>

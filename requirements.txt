@@ -1,0 +1,11 @@
+pandas
+numpy
+matplotlib
+scikit-learn
+pyarrow
+pyyaml
+fastapi
+uvicorn
+jinja2
+fredapi
+hmmlearn

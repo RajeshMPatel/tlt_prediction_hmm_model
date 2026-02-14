@@ -1,0 +1,18 @@
+name: tlt_vix_env
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - pandas
+  - numpy
+  - matplotlib
+  - scikit-learn
+  - pyarrow
+  - pyyaml
+  - fastapi
+  - uvicorn
+  - jinja2
+  - pip
+  - pip:
+      - fredapi
+      - hmmlearn

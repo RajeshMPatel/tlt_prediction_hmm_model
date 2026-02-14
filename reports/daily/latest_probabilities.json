@@ -1,0 +1,23 @@
+{
+  "date": "2025-11-26",
+  "horizon_days": 5,
+  "probabilities": {
+    "tlt_up_h5": 0.5350278257677875,
+    "tlt_down_h5": 0.4649721742322125,
+    "vix_up_h5": 0.46623025963113207,
+    "vix_down_h5": 0.5337697403688679
+  },
+  "regime_probabilities": {
+    "regime_0": 2.272479239300703e-11,
+    "regime_1": 3.8057808579192457e-26,
+    "regime_2": 0.9999999999772752
+  },
+  "most_likely_regime": "regime_2",
+  "generated_at_utc": "2026-02-14T06:52:28Z",
+  "last_data_update": "2026-02-13 00:00:00",
+  "charts": {
+    "tlt_chart": "/Users/rajeshpatel/dev/stocks/tlt_vix_web/reports/charts/tlt_regime_chart.png",
+    "vix_chart": "/Users/rajeshpatel/dev/stocks/tlt_vix_web/reports/charts/vix_regime_chart.png",
+    "posterior_chart": "/Users/rajeshpatel/dev/stocks/tlt_vix_web/reports/charts/regime_probabilities_chart.png"
+  }
+}

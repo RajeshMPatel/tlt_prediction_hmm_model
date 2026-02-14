@@ -1,0 +1,68 @@
+project:
+  name: tlt_vix_web
+  timezone: America/New_York
+
+paths:
+  raw_data_dir: data/raw
+  processed_data_dir: data/processed
+  charts_dir: reports/charts
+  daily_reports_dir: reports/daily
+
+data:
+  start_date: "2007-01-01"
+  end_date: null
+  yfinance:
+    tlt_symbol: "TLT"
+    vix_symbol: "^VIX"
+    max_retries: 5
+    retry_base_seconds: 2.0
+    retry_backoff: 2.0
+    request_pause_seconds: 0.5
+    threads: false
+  stooq:
+    enabled: true
+    tlt_symbol: "tlt.us"
+    vix_symbol: "vi.f"
+  fred:
+    required_series:
+      DGS2: "DGS2"
+      DGS10: "DGS10"
+      DGS20: "DGS20"
+      DGS30: "DGS30"
+      T10Y2Y: "T10Y2Y"
+      VIXCLS: "VIXCLS"
+    optional_global_10y_series:
+      # Placeholders for future integration. Keep code empty or map to valid
+      # FRED/other compatible IDs if available in your environment.
+      JAPAN10Y: null
+      GERMANY10Y: null
+      UK10Y: null
+
+features:
+  horizon_days: 5
+  realized_vol_window: 20
+  price_columns:
+    tlt_close: "tlt_close"
+    vix_close: "vix_close"
+  fred_columns:
+    us10y: "DGS10"
+    curve_slope: "T10Y2Y"
+  feature_columns:
+    - tlt_return
+    - vix_return
+    - realized_vol_20d
+    - us10y_change
+    - curve_slope
+    - global_yield_change_mean
+
+model:
+  n_regimes: 3
+  covariance_type: full
+  n_iter: 500
+  random_state: 42
+  smoothing:
+    enabled: true
+    span: 3
+
+reporting:
+  chart_lookback_days: 260
