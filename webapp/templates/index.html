@@ -35,6 +35,12 @@
     .bridge { margin: 12px 0 14px; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 10px; padding: 12px; font-size: 13px; color: #1e3a8a; }
     .bridge h4 { margin: 0 0 8px; color: #1e40af; }
     ul { margin-top: 8px; }
+    .explainer { margin-top: 24px; border-top: 1px solid #e5e7eb; padding-top: 20px; color: #4b5563; }
+    .explainer h3 { color: #1f2937; margin-bottom: 12px; }
+    .explainer p { margin: 8px 0; line-height: 1.5; }
+    .explainer ul { margin: 8px 0; padding-left: 20px; }
+    .explainer li { margin-bottom: 6px; }
+    .explainer strong { color: #374151; }
   </style>
 </head>
 <body>
@@ -200,6 +206,33 @@
       <p class="muted">Last data update: <strong>{{ payload.last_data_update }}</strong></p>
       <p class="muted">Generated at (UTC): <strong>{{ payload.generated_at_utc }}</strong></p>
       <p><a href="/status">View status/debug page</a></p>
+
+      <div class="explainer">
+        <h3>How the Model Works</h3>
+        <p>Think of the HMM model like a <strong>Doctor diagnosing a patient</strong>.</p>
+        
+        <p><strong>1. The Symptoms (Technical Indicators)</strong><br>
+        The "Technical Indicators" you see (RSI, Volatility, Trend Gap, Credit Spreads) are the symptoms. The model looks at all of them at once as a single "health profile" for the day.</p>
+        
+        <p><strong>2. The Diagnosis (Deciding the Regime)</strong><br>
+        The "Regime" is the medical condition. The model has studied 15+ years of history and learned that the market usually exists in one of 3 states (clusters):</p>
+        <ul>
+          <li><strong>Regime 1 (e.g., Healthy/Calm):</strong> Historically defined by Low Volatility + Stable Trends + Normal Spreads.</li>
+          <li><strong>Regime 2 (e.g., Fever/Crash):</strong> Historically defined by High Volatility + Spiking Spreads + Oversold RSI.</li>
+          <li><strong>Regime 3 (e.g., Mixed/Choppy):</strong> Everything else.</li>
+        </ul>
+        <p>It compares today's "symptoms" against these definitions to decide the current regime (e.g., "Today matches Regime 1 with 98% certainty").</p>
+
+        <p><strong>3. The Prognosis (Predicting the Next 5 Days)</strong><br>
+        The HMM predicts by <strong>historical precedent</strong>. Once it knows the diagnosis (e.g., Regime 1), it asks: <em>"In the past 15 years, every time the market was in Regime 1, what happened next?"</em></p>
+        <ul>
+          <li>It calculates the historical win rate for that regime (e.g., "TLT went UP 54% of the time").</li>
+          <li>It combines this with the certainty of the diagnosis to produce the final probability.</li>
+        </ul>
+
+        <p><strong>Why is this better than just using RSI?</strong><br>
+        A simple RSI rule says: "If RSI > 70, Sell." The HMM says: "If RSI > 70 <strong>BUT</strong> Volatility is Low and Spreads are Tight (Regime 1), that's actually a <strong>strong uptrend</strong>, so Buy." It captures the <strong>context</strong> that a single indicator misses.</p>
+      </div>
     {% else %}
       <p>No daily probabilities found yet. Run <code>bash scripts/run_pipeline.sh</code>.</p>
     {% endif %}

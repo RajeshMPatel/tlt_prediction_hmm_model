@@ -92,6 +92,26 @@ def _build_regime_labels(
         if "vix_rsi_14" in train_frame.columns
         else np.full(train_frame.shape[0], np.nan, dtype=float)
     )
+    inflation_values = (
+        train_frame["inflation_expectations"].values
+        if "inflation_expectations" in train_frame.columns
+        else np.full(train_frame.shape[0], np.nan, dtype=float)
+    )
+    credit_values = (
+        train_frame["credit_spread"].values
+        if "credit_spread" in train_frame.columns
+        else np.full(train_frame.shape[0], np.nan, dtype=float)
+    )
+    vol_5d_values = (
+        train_frame["realized_vol_5d"].values
+        if "realized_vol_5d" in train_frame.columns
+        else np.full(train_frame.shape[0], np.nan, dtype=float)
+    )
+    vol_60d_values = (
+        train_frame["realized_vol_60d"].values
+        if "realized_vol_60d" in train_frame.columns
+        else np.full(train_frame.shape[0], np.nan, dtype=float)
+    )
 
     for idx, col in enumerate(train_posterior.columns):
         weights = train_posterior[col].values
@@ -105,6 +125,10 @@ def _build_regime_labels(
         avg_us10y_change = _weighted_mean(weights, us10y_change_values)
         avg_tlt_rsi_14 = _weighted_mean(weights, tlt_rsi_values)
         avg_vix_rsi_14 = _weighted_mean(weights, vix_rsi_values)
+        avg_inflation = _weighted_mean(weights, inflation_values)
+        avg_credit = _weighted_mean(weights, credit_values)
+        avg_vol_5d = _weighted_mean(weights, vol_5d_values)
+        avg_vol_60d = _weighted_mean(weights, vol_60d_values)
         profiles.append(
             {
                 "key": col,
@@ -112,6 +136,8 @@ def _build_regime_labels(
                 "tlt_up_freq": tlt_up,
                 "vix_up_freq": vix_up,
                 "avg_realized_vol_20d": avg_vol,
+                "avg_realized_vol_5d": avg_vol_5d,
+                "avg_realized_vol_60d": avg_vol_60d,
                 "avg_tlt_trend_gap_20": avg_tlt_trend_gap,
                 "avg_vix_trend_gap_20": avg_vix_trend_gap,
                 "avg_tlt_channel_pos_20": avg_tlt_channel_pos,
@@ -119,6 +145,8 @@ def _build_regime_labels(
                 "avg_us10y_change": avg_us10y_change,
                 "avg_tlt_rsi_14": avg_tlt_rsi_14,
                 "avg_vix_rsi_14": avg_vix_rsi_14,
+                "avg_inflation": avg_inflation,
+                "avg_credit": avg_credit,
             }
         )
 
@@ -166,6 +194,11 @@ def _build_regime_labels(
         us10y_chg = p["avg_us10y_change"]
         tlt_rsi = p["avg_tlt_rsi_14"]
         vix_rsi = p["avg_vix_rsi_14"]
+        inflation = p["avg_inflation"]
+        credit = p["avg_credit"]
+        vol_5d = p["avg_realized_vol_5d"]
+        vol_60d = p["avg_realized_vol_60d"]
+
         tlt_trend_txt = (
             f"{tlt_gap * 100:.2f}% above 20d trend" if np.isfinite(tlt_gap) else "trend unavailable"
         )
@@ -183,6 +216,16 @@ def _build_regime_labels(
         )
         tlt_rsi_txt = f"{tlt_rsi:.1f}" if np.isfinite(tlt_rsi) else "unavailable"
         vix_rsi_txt = f"{vix_rsi:.1f}" if np.isfinite(vix_rsi) else "unavailable"
+        inflation_txt = f"{inflation:.2f}%" if np.isfinite(inflation) else "unavailable"
+        credit_txt = f"{credit:.2f}%" if np.isfinite(credit) else "unavailable"
+        
+        # Determine if volatility is accelerating or decelerating
+        vol_trend_txt = "stable"
+        if np.isfinite(vol_5d) and np.isfinite(vol_60d):
+            if vol_5d > vol_60d * 1.2:
+                vol_trend_txt = "accelerating (short-term > long-term)"
+            elif vol_5d < vol_60d * 0.8:
+                vol_trend_txt = "decelerating (short-term < long-term)"
 
         def _trend_signal(gap: float) -> str:
             if not np.isfinite(gap):
@@ -218,7 +261,12 @@ def _build_regime_labels(
                 if np.isfinite(vix_gap) or np.isfinite(vix_rsi)
                 else "VIX setup: neutral (insufficient data)"
             ),
-            f"Volatility regime: {volume_level.lower()}",
+            f"Volatility regime: {volume_level.lower()}, {vol_trend_txt}",
+            (
+                f"Macro context: Inflation Exp {inflation_txt}, Credit Spread {credit_txt}"
+                if np.isfinite(inflation) or np.isfinite(credit)
+                else "Macro context: unavailable"
+            )
         ]
         technical_reason_bullets = [
             f"TLT up frequency: {tlt_up:.2%}",
@@ -228,9 +276,11 @@ def _build_regime_labels(
                 if np.isfinite(avg_vol)
                 else "Realized volatility (20d): unavailable"
             ),
+            f"Vol trend: {vol_trend_txt} (5d: {vol_5d:.3f}, 60d: {vol_60d:.3f})",
             f"TLT technical position: {tlt_trend_txt}, {tlt_channel_txt}",
             f"VIX technical position: {vix_trend_txt}, {vix_channel_txt}",
             f"RSI(14): TLT {tlt_rsi_txt}, VIX {vix_rsi_txt}",
+            f"Macro: Inflation Exp {inflation_txt}, Credit Spread {credit_txt}",
             us10y_txt,
         ]
         technical_reason = "; ".join(technical_reason_bullets)

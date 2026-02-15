@@ -33,7 +33,9 @@ def build_feature_dataset(raw_df: pd.DataFrame, cfg: dict[str, Any]) -> pd.DataF
     # the next trading day's return and rolling volatility features.
     df["tlt_return"] = tlt_close_ffill.pct_change()
     df["vix_return"] = vix_close_ffill.pct_change()
+    df[f"realized_vol_5d"] = df["tlt_return"].rolling(5).std() * np.sqrt(252)
     df[f"realized_vol_{vol_window}d"] = df["tlt_return"].rolling(vol_window).std() * np.sqrt(252)
+    df[f"realized_vol_60d"] = df["tlt_return"].rolling(60).std() * np.sqrt(252)
     df["tlt_rsi_14"] = _rsi(tlt_close_ffill, window=14)
     df["vix_rsi_14"] = _rsi(vix_close_ffill, window=14)
 
@@ -64,6 +66,8 @@ def build_feature_dataset(raw_df: pd.DataFrame, cfg: dict[str, Any]) -> pd.DataF
 
     # FRED DGS10 is in percentage points; differencing captures daily rate change.
     df["us10y_change"] = df["DGS10"].diff()
+    df["inflation_expectations"] = df.get("T10YIE", np.nan).ffill()
+    df["credit_spread"] = df.get("BAMLH0A0HYM2", np.nan).ffill()
 
     if "T10Y2Y" in df.columns:
         df["curve_slope"] = df["T10Y2Y"]

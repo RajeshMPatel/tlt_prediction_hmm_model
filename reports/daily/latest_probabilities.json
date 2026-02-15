@@ -3,130 +3,139 @@
   "horizon_days": 5,
   "train_window_end": "2026-02-06",
   "latest_row_has_h5_label": false,
-  "train_rows": 4545,
-  "score_rows": 4549,
+  "train_rows": 4454,
+  "score_rows": 4458,
   "probabilities": {
-    "tlt_up_h5": 0.5293394160387259,
-    "tlt_down_h5": 0.4706605839612741,
-    "vix_up_h5": 0.4633152699968087,
-    "vix_down_h5": 0.5366847300031913
+    "tlt_up_h5": 0.5381874527635094,
+    "tlt_down_h5": 0.46181254723649057,
+    "vix_up_h5": 0.47018387463630085,
+    "vix_down_h5": 0.5298161253636992
   },
   "regime_probabilities": {
-    "Regime 1 - Low (Calm) Volume": 0.985326970093522,
-    "Regime 2 - High (Turbulent) Volume": 6.281239825157987e-06,
-    "Regime 3 - Medium (Normal) Volume": 0.014666748666652792
+    "Regime 1 - High (Turbulent) Volume": 2.692001616991391e-07,
+    "Regime 2 - Low (Calm) Volume": 0.986224910650413,
+    "Regime 3 - Medium (Normal) Volume": 0.013774820149425432
   },
   "regime_probabilities_raw": {
-    "regime_0": 0.985326970093522,
-    "regime_1": 6.281239825157987e-06,
-    "regime_2": 0.014666748666652792
+    "regime_0": 2.692001616991391e-07,
+    "regime_1": 0.986224910650413,
+    "regime_2": 0.013774820149425432
   },
   "regime_definitions": {
-    "Regime 1 - Low (Calm) Volume": {
+    "Regime 1 - High (Turbulent) Volume": {
       "technical_key": "regime_0",
-      "volume_level": "Low (Calm)",
+      "volume_level": "High (Turbulent)",
       "status": "Sideways / Unclear",
       "interpretation": "No strong directional edge; mixed behavior.",
-      "technical_reason": "TLT up frequency: 52.94%; VIX up frequency: 46.30%; Realized volatility (20d): 0.120; TLT technical position: 1.19% above 20d trend, 78% of 20d range; VIX technical position: 0.36% above 20d trend, 39% of 20d range; RSI(14): TLT 58.0, VIX 49.5; US10Y change -0.004",
-      "technical_takeaways": [
-        "TLT setup: bullish, neutral momentum",
-        "VIX setup: neutral, neutral momentum",
-        "Volatility regime: low (calm)"
-      ],
-      "technical_reason_bullets": [
-        "TLT up frequency: 52.94%",
-        "VIX up frequency: 46.30%",
-        "Realized volatility (20d): 0.120",
-        "TLT technical position: 1.19% above 20d trend, 78% of 20d range",
-        "VIX technical position: 0.36% above 20d trend, 39% of 20d range",
-        "RSI(14): TLT 58.0, VIX 49.5",
-        "US10Y change -0.004"
-      ],
-      "tlt_up_freq": 0.5294206350678248,
-      "vix_up_freq": 0.4630478439100423,
-      "avg_realized_vol_20d": 0.12027733497819534,
-      "avg_tlt_trend_gap_20": 0.011923529579572571,
-      "avg_vix_trend_gap_20": 0.003637431372784241,
-      "avg_tlt_channel_pos_20": 0.7754677068903634,
-      "avg_vix_channel_pos_20": 0.39340224082035424,
-      "avg_us10y_change": -0.003532527444609791,
-      "avg_tlt_rsi_14": 57.95514743740289,
-      "avg_vix_rsi_14": 49.48786984382159
-    },
-    "Regime 2 - High (Turbulent) Volume": {
-      "technical_key": "regime_1",
-      "volume_level": "High (Turbulent)",
-      "status": "Bond Strength, Volatility Cooling",
-      "interpretation": "Historically, TLT tends to rise while VIX tends to ease.",
-      "technical_reason": "TLT up frequency: 55.61%; VIX up frequency: 36.26%; Realized volatility (20d): 0.205; TLT technical position: 1.39% above 20d trend, 60% of 20d range; VIX technical position: 13.09% above 20d trend, 52% of 20d range; RSI(14): TLT 55.0, VIX 54.4; US10Y change -0.008",
+      "technical_reason": "TLT up frequency: 51.50%; VIX up frequency: 36.14%; Realized volatility (20d): 0.212; Vol trend: stable (5d: 0.213, 60d: 0.194); TLT technical position: 1.04% above 20d trend, 57% of 20d range; VIX technical position: 8.55% above 20d trend, 45% of 20d range; RSI(14): TLT 53.2, VIX 52.0; Macro: Inflation Exp 1.76%, Credit Spread 8.29%; US10Y change -0.004",
       "technical_takeaways": [
         "TLT setup: bullish, neutral momentum",
         "VIX setup: bullish, neutral momentum",
-        "Volatility regime: high (turbulent)"
+        "Volatility regime: high (turbulent), stable",
+        "Macro context: Inflation Exp 1.76%, Credit Spread 8.29%"
       ],
       "technical_reason_bullets": [
-        "TLT up frequency: 55.61%",
-        "VIX up frequency: 36.26%",
-        "Realized volatility (20d): 0.205",
-        "TLT technical position: 1.39% above 20d trend, 60% of 20d range",
-        "VIX technical position: 13.09% above 20d trend, 52% of 20d range",
-        "RSI(14): TLT 55.0, VIX 54.4",
-        "US10Y change -0.008"
+        "TLT up frequency: 51.50%",
+        "VIX up frequency: 36.14%",
+        "Realized volatility (20d): 0.212",
+        "Vol trend: stable (5d: 0.213, 60d: 0.194)",
+        "TLT technical position: 1.04% above 20d trend, 57% of 20d range",
+        "VIX technical position: 8.55% above 20d trend, 45% of 20d range",
+        "RSI(14): TLT 53.2, VIX 52.0",
+        "Macro: Inflation Exp 1.76%, Credit Spread 8.29%",
+        "US10Y change -0.004"
       ],
-      "tlt_up_freq": 0.5560707701337351,
-      "vix_up_freq": 0.362642504324111,
-      "avg_realized_vol_20d": 0.20503648235498892,
-      "avg_tlt_trend_gap_20": 0.013938023417615204,
-      "avg_vix_trend_gap_20": 0.13087954408180377,
-      "avg_tlt_channel_pos_20": 0.6033419802014144,
-      "avg_vix_channel_pos_20": 0.5214068165711476,
-      "avg_us10y_change": -0.008143056259547117,
-      "avg_tlt_rsi_14": 55.02530896501653,
-      "avg_vix_rsi_14": 54.4317300543652
+      "tlt_up_freq": 0.5150475441215704,
+      "vix_up_freq": 0.361438506843803,
+      "avg_realized_vol_20d": 0.21194876030573745,
+      "avg_tlt_trend_gap_20": 0.010420330681280553,
+      "avg_vix_trend_gap_20": 0.08548316897247728,
+      "avg_tlt_channel_pos_20": 0.5697141014592538,
+      "avg_vix_channel_pos_20": 0.4498195663443505,
+      "avg_us10y_change": -0.0044368025816488525,
+      "avg_tlt_rsi_14": 53.16979268995511,
+      "avg_vix_rsi_14": 52.01019933188848
+    },
+    "Regime 2 - Low (Calm) Volume": {
+      "technical_key": "regime_1",
+      "volume_level": "Low (Calm)",
+      "status": "Sideways / Unclear",
+      "interpretation": "No strong directional edge; mixed behavior.",
+      "technical_reason": "TLT up frequency: 53.84%; VIX up frequency: 47.00%; Realized volatility (20d): 0.116; Vol trend: stable (5d: 0.110, 60d: 0.119); TLT technical position: 1.17% above 20d trend, 77% of 20d range; VIX technical position: 1.22% above 20d trend, 41% of 20d range; RSI(14): TLT 58.0, VIX 50.2; Macro: Inflation Exp 2.04%, Credit Spread 4.68%; US10Y change -0.004",
+      "technical_takeaways": [
+        "TLT setup: bullish, neutral momentum",
+        "VIX setup: bullish, neutral momentum",
+        "Volatility regime: low (calm), stable",
+        "Macro context: Inflation Exp 2.04%, Credit Spread 4.68%"
+      ],
+      "technical_reason_bullets": [
+        "TLT up frequency: 53.84%",
+        "VIX up frequency: 47.00%",
+        "Realized volatility (20d): 0.116",
+        "Vol trend: stable (5d: 0.110, 60d: 0.119)",
+        "TLT technical position: 1.17% above 20d trend, 77% of 20d range",
+        "VIX technical position: 1.22% above 20d trend, 41% of 20d range",
+        "RSI(14): TLT 58.0, VIX 50.2",
+        "Macro: Inflation Exp 2.04%, Credit Spread 4.68%",
+        "US10Y change -0.004"
+      ],
+      "tlt_up_freq": 0.5383533729491803,
+      "vix_up_freq": 0.47000951665902385,
+      "avg_realized_vol_20d": 0.11553589022906025,
+      "avg_tlt_trend_gap_20": 0.011681748490012784,
+      "avg_vix_trend_gap_20": 0.012193511786462666,
+      "avg_tlt_channel_pos_20": 0.7719068764952424,
+      "avg_vix_channel_pos_20": 0.414852304415935,
+      "avg_us10y_change": -0.004286581157275556,
+      "avg_tlt_rsi_14": 57.95513333083383,
+      "avg_vix_rsi_14": 50.16178018152526
     },
     "Regime 3 - Medium (Normal) Volume": {
       "technical_key": "regime_2",
       "volume_level": "Medium (Normal)",
       "status": "Sideways / Unclear",
       "interpretation": "No strong directional edge; mixed behavior.",
-      "technical_reason": "TLT up frequency: 52.39%; VIX up frequency: 48.13%; Realized volatility (20d): 0.139; TLT technical position: -1.26% above 20d trend, 24% of 20d range; VIX technical position: -2.53% above 20d trend, 34% of 20d range; RSI(14): TLT 43.2, VIX 47.2; US10Y change +0.005",
+      "technical_reason": "TLT up frequency: 52.63%; VIX up frequency: 48.27%; Realized volatility (20d): 0.138; Vol trend: stable (5d: 0.133, 60d: 0.144); TLT technical position: -1.20% above 20d trend, 25% of 20d range; VIX technical position: -2.60% above 20d trend, 34% of 20d range; RSI(14): TLT 43.3, VIX 47.1; Macro: Inflation Exp 2.15%, Credit Spread 4.74%; US10Y change +0.004",
       "technical_takeaways": [
         "TLT setup: bearish, neutral momentum",
         "VIX setup: bearish, neutral momentum",
-        "Volatility regime: medium (normal)"
+        "Volatility regime: medium (normal), stable",
+        "Macro context: Inflation Exp 2.15%, Credit Spread 4.74%"
       ],
       "technical_reason_bullets": [
-        "TLT up frequency: 52.39%",
-        "VIX up frequency: 48.13%",
-        "Realized volatility (20d): 0.139",
-        "TLT technical position: -1.26% above 20d trend, 24% of 20d range",
-        "VIX technical position: -2.53% above 20d trend, 34% of 20d range",
-        "RSI(14): TLT 43.2, VIX 47.2",
-        "US10Y change +0.005"
+        "TLT up frequency: 52.63%",
+        "VIX up frequency: 48.27%",
+        "Realized volatility (20d): 0.138",
+        "Vol trend: stable (5d: 0.133, 60d: 0.144)",
+        "TLT technical position: -1.20% above 20d trend, 25% of 20d range",
+        "VIX technical position: -2.60% above 20d trend, 34% of 20d range",
+        "RSI(14): TLT 43.3, VIX 47.1",
+        "Macro: Inflation Exp 2.15%, Credit Spread 4.74%",
+        "US10Y change +0.004"
       ],
-      "tlt_up_freq": 0.5238715916609793,
-      "vix_up_freq": 0.48132433878130065,
-      "avg_realized_vol_20d": 0.13909350924418729,
-      "avg_tlt_trend_gap_20": -0.012582711929648363,
-      "avg_vix_trend_gap_20": -0.02525193538419432,
-      "avg_tlt_channel_pos_20": 0.24198760245302173,
-      "avg_vix_channel_pos_20": 0.3414189638221566,
-      "avg_us10y_change": 0.005159164168595339,
-      "avg_tlt_rsi_14": 43.241918942143876,
-      "avg_vix_rsi_14": 47.18599931590255
+      "tlt_up_freq": 0.5263086485942853,
+      "vix_up_freq": 0.4826693701248885,
+      "avg_realized_vol_20d": 0.13754619857052533,
+      "avg_tlt_trend_gap_20": -0.012023330148430433,
+      "avg_vix_trend_gap_20": -0.026030062374121456,
+      "avg_tlt_channel_pos_20": 0.25158268231416425,
+      "avg_vix_channel_pos_20": 0.33910551443353737,
+      "avg_us10y_change": 0.00442298790526439,
+      "avg_tlt_rsi_14": 43.258224820211296,
+      "avg_vix_rsi_14": 47.14361108563421
     }
   },
-  "most_likely_regime": "Regime 1 - Low (Calm) Volume",
-  "most_likely_regime_key": "regime_0",
+  "most_likely_regime": "Regime 2 - Low (Calm) Volume",
+  "most_likely_regime_key": "regime_1",
   "market_context": {
     "tlt_close": 89.23,
-    "vix_close": 20.81999969482422,
-    "tlt_20d_min_close": 86.31983184814453,
+    "vix_close": 20.82,
+    "tlt_20d_min_close": 86.54,
     "tlt_20d_max_close": 89.23,
-    "vix_20d_min_close": 15.640000343322754,
-    "vix_20d_max_close": 21.770000457763672,
-    "tlt_trend_gap_20": 0.02081091168549576,
-    "vix_trend_gap_20": 0.18177945882968238
+    "vix_20d_min_close": 15.64,
+    "vix_20d_max_close": 21.77,
+    "tlt_trend_gap_20": 0.01906099747604517,
+    "vix_trend_gap_20": 0.17527519051651153
   },
   "actionable_signals": {
     "policy_enabled": true,
@@ -136,8 +145,8 @@
       "asset": "TLT",
       "action": "SKIP",
       "direction": "UP",
-      "probability_up": 0.5293394160387259,
-      "confidence": 0.5293394160387259,
+      "probability_up": 0.5381874527635094,
+      "confidence": 0.5381874527635094,
       "selected_threshold": null,
       "expected_hit_rate": null,
       "coverage": null,
@@ -147,8 +156,8 @@
       "asset": "VIX",
       "action": "SKIP",
       "direction": "DOWN",
-      "probability_up": 0.4633152699968087,
-      "confidence": 0.5366847300031913,
+      "probability_up": 0.47018387463630085,
+      "confidence": 0.5298161253636992,
       "selected_threshold": null,
       "expected_hit_rate": null,
       "coverage": null,
@@ -160,21 +169,21 @@
     "status": "ok",
     "n_splits": 5,
     "min_train_rows": 500,
-    "oos_rows": 3785,
+    "oos_rows": 3710,
     "tlt": {
-      "hit_rate": 0.5257595772787318,
-      "brier_score": 0.25120715362281704,
-      "log_loss": 0.6956158497535355,
+      "hit_rate": 0.525067385444744,
+      "brier_score": 0.2500390583824374,
+      "log_loss": 0.6932580671432926,
       "confidence_buckets": {
         "ge_0.55": {
-          "coverage": 0.5418758256274769,
-          "rows": 2051,
-          "hit_rate": 0.5070697220867869
+          "coverage": 0.36873315363881404,
+          "rows": 1368,
+          "hit_rate": 0.5358187134502924
         },
         "ge_0.60": {
-          "coverage": 0.046499339498018495,
-          "rows": 176,
-          "hit_rate": 0.5
+          "coverage": 0.14204851752021563,
+          "rows": 527,
+          "hit_rate": 0.5616698292220114
         },
         "ge_0.65": {
           "coverage": 0.0,
@@ -186,9 +195,9 @@
         "rows_considered": 1000,
         "confidence_buckets": {
           "ge_0.55": {
-            "coverage": 0.447,
-            "rows": 447,
-            "hit_rate": 0.436241610738255
+            "coverage": 0.232,
+            "rows": 232,
+            "hit_rate": 0.40948275862068967
           },
           "ge_0.60": {
             "coverage": 0.0,
@@ -204,19 +213,19 @@
       }
     },
     "vix": {
-      "hit_rate": 0.5363276089828269,
-      "brier_score": 0.24810198546644993,
-      "log_loss": 0.6893173257271769,
+      "hit_rate": 0.5212938005390836,
+      "brier_score": 0.24813811367163047,
+      "log_loss": 0.689399639762582,
       "confidence_buckets": {
         "ge_0.55": {
-          "coverage": 0.3682959048877147,
-          "rows": 1394,
-          "hit_rate": 0.5659971305595409
+          "coverage": 0.36873315363881404,
+          "rows": 1368,
+          "hit_rate": 0.5701754385964912
         },
         "ge_0.60": {
-          "coverage": 0.047291941875825624,
-          "rows": 179,
-          "hit_rate": 0.6368715083798883
+          "coverage": 0.06037735849056604,
+          "rows": 224,
+          "hit_rate": 0.5982142857142857
         },
         "ge_0.65": {
           "coverage": 0.0,
@@ -228,14 +237,14 @@
         "rows_considered": 1000,
         "confidence_buckets": {
           "ge_0.55": {
-            "coverage": 0.717,
-            "rows": 717,
-            "hit_rate": 0.5829846582984658
+            "coverage": 0.533,
+            "rows": 533,
+            "hit_rate": 0.6341463414634146
           },
           "ge_0.60": {
-            "coverage": 0.033,
-            "rows": 33,
-            "hit_rate": 0.7878787878787878
+            "coverage": 0.105,
+            "rows": 105,
+            "hit_rate": 0.7238095238095238
           },
           "ge_0.65": {
             "coverage": 0.0,
@@ -248,42 +257,42 @@
     "folds": [
       {
         "fold": 1,
-        "train_rows": 760,
-        "test_rows": 757,
-        "test_start": "2010-04-05",
-        "test_end": "2013-05-31"
+        "train_rows": 744,
+        "test_rows": 742,
+        "test_start": "2010-05-20",
+        "test_end": "2013-07-11"
       },
       {
         "fold": 2,
-        "train_rows": 1517,
-        "test_rows": 757,
-        "test_start": "2013-06-03",
-        "test_end": "2016-07-28"
+        "train_rows": 1486,
+        "test_rows": 742,
+        "test_start": "2013-07-12",
+        "test_end": "2016-08-29"
       },
       {
         "fold": 3,
-        "train_rows": 2274,
-        "test_rows": 757,
-        "test_start": "2016-07-29",
-        "test_end": "2019-09-26"
+        "train_rows": 2228,
+        "test_rows": 742,
+        "test_start": "2016-08-30",
+        "test_end": "2019-10-17"
       },
       {
         "fold": 4,
-        "train_rows": 3031,
-        "test_rows": 757,
-        "test_start": "2019-09-27",
-        "test_end": "2022-11-29"
+        "train_rows": 2970,
+        "test_rows": 742,
+        "test_start": "2019-10-18",
+        "test_end": "2022-12-09"
       },
       {
         "fold": 5,
-        "train_rows": 3788,
-        "test_rows": 757,
-        "test_start": "2022-11-30",
+        "train_rows": 3712,
+        "test_rows": 742,
+        "test_start": "2022-12-12",
         "test_end": "2026-02-06"
       }
     ]
   },
-  "generated_at_utc": "2026-02-15T02:10:33Z",
+  "generated_at_utc": "2026-02-15T02:25:32Z",
   "last_data_update": "2026-02-13 00:00:00",
   "charts": {
     "tlt_chart": "/Users/rajeshpatel/dev/stocks/tlt_vix_web/reports/charts/tlt_regime_chart.png",

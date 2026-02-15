@@ -1,8 +1,8 @@
 {
-  "generated_at_utc": "2026-02-15T02:10:33Z",
+  "generated_at_utc": "2026-02-15T02:25:32Z",
   "last_data_timestamp": "2026-02-13 00:00:00",
-  "raw_rows": 4990,
-  "model_rows": 4549,
+  "raw_rows": 5055,
+  "model_rows": 4458,
   "actionable_signals": {
     "policy_enabled": true,
     "rolling_oos_rows": 1000,
@@ -11,8 +11,8 @@
       "asset": "TLT",
       "action": "SKIP",
       "direction": "UP",
-      "probability_up": 0.5293394160387259,
-      "confidence": 0.5293394160387259,
+      "probability_up": 0.5381874527635094,
+      "confidence": 0.5381874527635094,
       "selected_threshold": null,
       "expected_hit_rate": null,
       "coverage": null,
@@ -22,8 +22,8 @@
       "asset": "VIX",
       "action": "SKIP",
       "direction": "DOWN",
-      "probability_up": 0.4633152699968087,
-      "confidence": 0.5366847300031913,
+      "probability_up": 0.47018387463630085,
+      "confidence": 0.5298161253636992,
       "selected_threshold": null,
       "expected_hit_rate": null,
       "coverage": null,
@@ -31,145 +31,104 @@
     }
   },
   "warnings": [
-    "Failed FRED series DGS2 (DGS2).",
-    "Failed FRED series DGS10 (DGS10).",
-    "Failed FRED series DGS20 (DGS20).",
-    "Failed FRED series DGS30 (DGS30).",
-    "Failed FRED series T10Y2Y (T10Y2Y).",
-    "Failed FRED series VIXCLS (VIXCLS).",
     "JAPAN10Y placeholder is empty; filling with NaN.",
     "GERMANY10Y placeholder is empty; filling with NaN.",
     "UK10Y placeholder is empty; filling with NaN."
   ],
   "sources": {
     "tlt": {
-      "source": "cache",
+      "source": "download+cache",
       "symbol": "TLT",
+      "path": "/Users/rajeshpatel/dev/stocks/tlt_vix_web/data/raw/tlt_close.parquet",
       "download_meta": {
         "attempts": 5,
-        "strategy": "failed",
+        "strategy": "stooq",
         "attempt_details": [
           {
             "attempt": 1,
             "status": "error",
-            "error": "<urlopen error [Errno 8] nodename nor servname provided, or not known>"
+            "error": "HTTP Error 429: Too Many Requests"
           },
           {
             "attempt": 2,
             "status": "error",
-            "error": "<urlopen error [Errno 8] nodename nor servname provided, or not known>"
+            "error": "HTTP Error 429: Too Many Requests"
           },
           {
             "attempt": 3,
             "status": "error",
-            "error": "<urlopen error [Errno 8] nodename nor servname provided, or not known>"
+            "error": "HTTP Error 429: Too Many Requests"
           },
           {
             "attempt": 4,
             "status": "error",
-            "error": "<urlopen error [Errno 8] nodename nor servname provided, or not known>"
+            "error": "HTTP Error 429: Too Many Requests"
           },
           {
             "attempt": 5,
             "status": "error",
-            "error": "<urlopen error [Errno 8] nodename nor servname provided, or not known>"
+            "error": "HTTP Error 429: Too Many Requests"
           }
         ],
-        "error": "<urlopen error [Errno 8] nodename nor servname provided, or not known>",
-        "stooq_error": "<urlopen error [Errno 8] nodename nor servname provided, or not known>"
+        "error": "HTTP Error 429: Too Many Requests",
+        "stooq_symbol": "tlt.us"
       }
     },
     "vix": {
-      "source": "cache",
+      "source": "fred_vixcls",
       "symbol": "^VIX",
-      "download_meta": {
-        "attempts": 5,
-        "strategy": "failed",
-        "attempt_details": [
-          {
-            "attempt": 1,
-            "status": "error",
-            "error": "<urlopen error [Errno 8] nodename nor servname provided, or not known>"
-          },
-          {
-            "attempt": 2,
-            "status": "error",
-            "error": "<urlopen error [Errno 8] nodename nor servname provided, or not known>"
-          },
-          {
-            "attempt": 3,
-            "status": "error",
-            "error": "<urlopen error [Errno 8] nodename nor servname provided, or not known>"
-          },
-          {
-            "attempt": 4,
-            "status": "error",
-            "error": "<urlopen error [Errno 8] nodename nor servname provided, or not known>"
-          },
-          {
-            "attempt": 5,
-            "status": "error",
-            "error": "<urlopen error [Errno 8] nodename nor servname provided, or not known>"
-          }
-        ],
-        "error": "<urlopen error [Errno 8] nodename nor servname provided, or not known>",
-        "stooq_error": "<urlopen error [Errno 8] nodename nor servname provided, or not known>"
-      }
+      "warning": "Used FRED VIXCLS due to market-source failure: No data returned from yfinance for ^VIX after retries/fallback. Details: {'attempts': 5, 'strategy': 'failed', 'attempt_details': [{'attempt': 1, 'status': 'error', 'error': 'HTTP Error 429: Too Many Requests'}, {'attempt': 2, 'status': 'error', 'error': 'HTTP Error 429: Too Many Requests'}, {'attempt': 3, 'status': 'error', 'error': 'HTTP Error 429: Too Many Requests'}, {'attempt': 4, 'status': 'error', 'error': 'HTTP Error 429: Too Many Requests'}, {'attempt': 5, 'status': 'error', 'error': 'HTTP Error 429: Too Many Requests'}], 'error': 'HTTP Error 429: Too Many Requests', 'stooq_error': 'No columns to parse from file'}"
     },
     "fred": {
       "path": "/Users/rajeshpatel/dev/stocks/tlt_vix_web/data/raw/fred_series.parquet",
       "series": {
         "DGS2": {
           "series_id": "DGS2",
-          "status": "failed",
-          "error": "<urlopen error [Errno 8] nodename nor servname provided, or not known>"
+          "status": "ok"
         },
         "DGS10": {
           "series_id": "DGS10",
-          "status": "failed",
-          "error": "<urlopen error [Errno 8] nodename nor servname provided, or not known>"
+          "status": "ok"
         },
         "DGS20": {
           "series_id": "DGS20",
-          "status": "failed",
-          "error": "<urlopen error [Errno 8] nodename nor servname provided, or not known>"
+          "status": "ok"
         },
         "DGS30": {
           "series_id": "DGS30",
-          "status": "failed",
-          "error": "<urlopen error [Errno 8] nodename nor servname provided, or not known>"
+          "status": "ok"
         },
         "T10Y2Y": {
           "series_id": "T10Y2Y",
-          "status": "failed",
-          "error": "<urlopen error [Errno 8] nodename nor servname provided, or not known>"
+          "status": "ok"
         },
         "VIXCLS": {
           "series_id": "VIXCLS",
-          "status": "failed",
-          "error": "<urlopen error [Errno 8] nodename nor servname provided, or not known>"
+          "status": "ok"
+        },
+        "T10YIE": {
+          "series_id": "T10YIE",
+          "status": "ok"
+        },
+        "BAMLH0A0HYM2": {
+          "series_id": "BAMLH0A0HYM2",
+          "status": "ok"
         }
       },
       "warnings": [
-        "Failed FRED series DGS2 (DGS2).",
-        "Failed FRED series DGS10 (DGS10).",
-        "Failed FRED series DGS20 (DGS20).",
-        "Failed FRED series DGS30 (DGS30).",
-        "Failed FRED series T10Y2Y (T10Y2Y).",
-        "Failed FRED series VIXCLS (VIXCLS).",
         "JAPAN10Y placeholder is empty; filling with NaN.",
         "GERMANY10Y placeholder is empty; filling with NaN.",
         "UK10Y placeholder is empty; filling with NaN."
       ]
     },
     "last_timestamp": "2026-02-13 00:00:00",
-    "rows": 4990
+    "rows": 5055
   },
   "debug": {
     "feature_path": "/Users/rajeshpatel/dev/stocks/tlt_vix_web/data/processed/feature_dataset.parquet",
     "model_path": "/Users/rajeshpatel/dev/stocks/tlt_vix_web/data/processed/model_dataset.parquet",
     "posterior_path": "/Users/rajeshpatel/dev/stocks/tlt_vix_web/data/processed/posterior_probabilities.parquet",
     "regime_up_path": "/Users/rajeshpatel/dev/stocks/tlt_vix_web/data/processed/regime_up_frequencies.parquet",
-    "force_refresh": false
+    "force_refresh": true
   }
 }
