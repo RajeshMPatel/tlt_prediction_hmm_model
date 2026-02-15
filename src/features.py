@@ -8,6 +8,18 @@ import numpy as np
 import pandas as pd
 
 
+def _rsi(series: pd.Series, window: int = 14) -> pd.Series:
+    """Compute classic RSI from price series."""
+    delta = series.diff()
+    gain = delta.clip(lower=0.0)
+    loss = -delta.clip(upper=0.0)
+    avg_gain = gain.ewm(alpha=1 / window, adjust=False, min_periods=window).mean()
+    avg_loss = loss.ewm(alpha=1 / window, adjust=False, min_periods=window).mean()
+    rs = avg_gain / avg_loss.replace(0.0, np.nan)
+    rsi = 100.0 - (100.0 / (1.0 + rs))
+    return rsi.fillna(50.0)
+
+
 def build_feature_dataset(raw_df: pd.DataFrame, cfg: dict[str, Any]) -> pd.DataFrame:
     """Create model features and H5 forward returns from merged raw data."""
     horizon = int(cfg["features"]["horizon_days"])
@@ -22,6 +34,8 @@ def build_feature_dataset(raw_df: pd.DataFrame, cfg: dict[str, Any]) -> pd.DataF
     df["tlt_return"] = tlt_close_ffill.pct_change()
     df["vix_return"] = vix_close_ffill.pct_change()
     df[f"realized_vol_{vol_window}d"] = df["tlt_return"].rolling(vol_window).std() * np.sqrt(252)
+    df["tlt_rsi_14"] = _rsi(tlt_close_ffill, window=14)
+    df["vix_rsi_14"] = _rsi(vix_close_ffill, window=14)
 
     # Trend and channel-style features.
     df["tlt_mom_5"] = tlt_close_ffill.pct_change(5)

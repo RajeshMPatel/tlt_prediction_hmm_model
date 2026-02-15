@@ -51,6 +51,8 @@ features:
     - tlt_return
     - vix_return
     - realized_vol_20d
+    - tlt_rsi_14
+    - vix_rsi_14
     - tlt_mom_5
     - tlt_mom_20
     - vix_mom_5

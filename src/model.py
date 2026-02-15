@@ -82,6 +82,16 @@ def _build_regime_labels(
         if "us10y_change" in train_frame.columns
         else np.full(train_frame.shape[0], np.nan, dtype=float)
     )
+    tlt_rsi_values = (
+        train_frame["tlt_rsi_14"].values
+        if "tlt_rsi_14" in train_frame.columns
+        else np.full(train_frame.shape[0], np.nan, dtype=float)
+    )
+    vix_rsi_values = (
+        train_frame["vix_rsi_14"].values
+        if "vix_rsi_14" in train_frame.columns
+        else np.full(train_frame.shape[0], np.nan, dtype=float)
+    )
 
     for idx, col in enumerate(train_posterior.columns):
         weights = train_posterior[col].values
@@ -93,6 +103,8 @@ def _build_regime_labels(
         avg_tlt_channel_pos = _weighted_mean(weights, tlt_channel_values)
         avg_vix_channel_pos = _weighted_mean(weights, vix_channel_values)
         avg_us10y_change = _weighted_mean(weights, us10y_change_values)
+        avg_tlt_rsi_14 = _weighted_mean(weights, tlt_rsi_values)
+        avg_vix_rsi_14 = _weighted_mean(weights, vix_rsi_values)
         profiles.append(
             {
                 "key": col,
@@ -105,6 +117,8 @@ def _build_regime_labels(
                 "avg_tlt_channel_pos_20": avg_tlt_channel_pos,
                 "avg_vix_channel_pos_20": avg_vix_channel_pos,
                 "avg_us10y_change": avg_us10y_change,
+                "avg_tlt_rsi_14": avg_tlt_rsi_14,
+                "avg_vix_rsi_14": avg_vix_rsi_14,
             }
         )
 
@@ -144,12 +158,14 @@ def _build_regime_labels(
         else:
             volume_level = "Medium (Normal)"
 
-        label = f"Volume: {volume_level} | Status: {status} [{p['regime_idx'] + 1}]"
+        label = f"Regime {p['regime_idx'] + 1} - {volume_level} Volume"
         tlt_gap = p["avg_tlt_trend_gap_20"]
         vix_gap = p["avg_vix_trend_gap_20"]
         tlt_ch = p["avg_tlt_channel_pos_20"]
         vix_ch = p["avg_vix_channel_pos_20"]
         us10y_chg = p["avg_us10y_change"]
+        tlt_rsi = p["avg_tlt_rsi_14"]
+        vix_rsi = p["avg_vix_rsi_14"]
         tlt_trend_txt = (
             f"{tlt_gap * 100:.2f}% above 20d trend" if np.isfinite(tlt_gap) else "trend unavailable"
         )
@@ -165,11 +181,59 @@ def _build_regime_labels(
         us10y_txt = (
             f"US10Y change {us10y_chg:+.3f}" if np.isfinite(us10y_chg) else "US10Y change unavailable"
         )
-        technical_reason = (
-            f"TLT up frequency {tlt_up:.2%}, VIX up frequency {vix_up:.2%}; "
-            f"TLT is {tlt_trend_txt} ({tlt_channel_txt}), "
-            f"VIX is {vix_trend_txt} ({vix_channel_txt}), {us10y_txt}."
-        )
+        tlt_rsi_txt = f"{tlt_rsi:.1f}" if np.isfinite(tlt_rsi) else "unavailable"
+        vix_rsi_txt = f"{vix_rsi:.1f}" if np.isfinite(vix_rsi) else "unavailable"
+
+        def _trend_signal(gap: float) -> str:
+            if not np.isfinite(gap):
+                return "neutral"
+            if gap >= 0.01:
+                return "bullish"
+            if gap <= -0.01:
+                return "bearish"
+            return "neutral"
+
+        def _rsi_signal(rsi: float) -> str:
+            if not np.isfinite(rsi):
+                return "neutral"
+            if rsi >= 60:
+                return "bullish momentum"
+            if rsi <= 40:
+                return "bearish momentum"
+            return "neutral momentum"
+
+        tlt_trend_signal = _trend_signal(tlt_gap)
+        vix_trend_signal = _trend_signal(vix_gap)
+        tlt_rsi_signal = _rsi_signal(tlt_rsi)
+        vix_rsi_signal = _rsi_signal(vix_rsi)
+
+        technical_takeaways = [
+            (
+                f"TLT setup: {tlt_trend_signal}, {tlt_rsi_signal}"
+                if np.isfinite(tlt_gap) or np.isfinite(tlt_rsi)
+                else "TLT setup: neutral (insufficient data)"
+            ),
+            (
+                f"VIX setup: {vix_trend_signal}, {vix_rsi_signal}"
+                if np.isfinite(vix_gap) or np.isfinite(vix_rsi)
+                else "VIX setup: neutral (insufficient data)"
+            ),
+            f"Volatility regime: {volume_level.lower()}",
+        ]
+        technical_reason_bullets = [
+            f"TLT up frequency: {tlt_up:.2%}",
+            f"VIX up frequency: {vix_up:.2%}",
+            (
+                f"Realized volatility (20d): {avg_vol:.3f}"
+                if np.isfinite(avg_vol)
+                else "Realized volatility (20d): unavailable"
+            ),
+            f"TLT technical position: {tlt_trend_txt}, {tlt_channel_txt}",
+            f"VIX technical position: {vix_trend_txt}, {vix_channel_txt}",
+            f"RSI(14): TLT {tlt_rsi_txt}, VIX {vix_rsi_txt}",
+            us10y_txt,
+        ]
+        technical_reason = "; ".join(technical_reason_bullets)
 
         label_map[p["key"]] = label
         profile_out[label] = {
@@ -178,6 +242,8 @@ def _build_regime_labels(
             "status": status,
             "interpretation": interpretation,
             "technical_reason": technical_reason,
+            "technical_takeaways": technical_takeaways,
+            "technical_reason_bullets": technical_reason_bullets,
             "tlt_up_freq": float(tlt_up),
             "vix_up_freq": float(vix_up),
             "avg_realized_vol_20d": (
@@ -197,6 +263,12 @@ def _build_regime_labels(
             ),
             "avg_us10y_change": (
                 None if not np.isfinite(us10y_chg) else float(us10y_chg)
+            ),
+            "avg_tlt_rsi_14": (
+                None if not np.isfinite(tlt_rsi) else float(tlt_rsi)
+            ),
+            "avg_vix_rsi_14": (
+                None if not np.isfinite(vix_rsi) else float(vix_rsi)
             ),
         }
 
