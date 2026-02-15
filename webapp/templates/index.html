@@ -41,6 +41,11 @@
     .explainer ul { margin: 8px 0; padding-left: 20px; }
     .explainer li { margin-bottom: 6px; }
     .explainer strong { color: #374151; }
+    .sentiment-bar { height: 8px; background: #e5e7eb; border-radius: 4px; overflow: hidden; margin-top: 6px; }
+    .sentiment-fill { height: 100%; background: #6b7280; }
+    .sentiment-fill.fear { background: #ef4444; }
+    .sentiment-fill.greed { background: #22c55e; }
+    .sentiment-fill.neutral { background: #eab308; }
   </style>
 </head>
 <body>
@@ -54,6 +59,27 @@
         <div class="tile"><div class="k">P(VIX up H5)</div><div class="v">{{ "%.2f%%"|format(payload.probabilities.vix_up_h5 * 100) }}</div></div>
         <div class="tile"><div class="k">P(VIX down H5)</div><div class="v">{{ "%.2f%%"|format(payload.probabilities.vix_down_h5 * 100) }}</div></div>
       </div>
+      
+      {% if payload.market_context.synthetic_fear_greed is not none %}
+      {% set sentiment = payload.market_context.synthetic_fear_greed %}
+      {% set sentiment_cls = 'neutral' %}
+      {% if sentiment <= 45 %}{% set sentiment_cls = 'fear' %}{% endif %}
+      {% if sentiment >= 55 %}{% set sentiment_cls = 'greed' %}{% endif %}
+      <div class="grid" style="margin-top: 12px; grid-template-columns: 1fr;">
+        <div class="tile">
+          <div class="k">Synthetic Fear & Greed Index</div>
+          <div class="v" style="font-size: 20px;">
+            {{ "%.0f"|format(sentiment) }} 
+            <span style="font-size: 14px; color: #6b7280; font-weight: 400;">
+              {% if sentiment <= 25 %}(Extreme Fear){% elif sentiment <= 45 %}(Fear){% elif sentiment >= 75 %}(Extreme Greed){% elif sentiment >= 55 %}(Greed){% else %}(Neutral){% endif %}
+            </span>
+          </div>
+          <div class="sentiment-bar">
+            <div class="sentiment-fill {{ sentiment_cls }}" style="width: {{ sentiment }}%;"></div>
+          </div>
+        </div>
+      </div>
+      {% endif %}
 
       {% if payload.actionable_signals and payload.actionable_signals.policy_enabled %}
       <h3>Today Action Signals</h3>
@@ -212,7 +238,7 @@
         <p>Think of the HMM model like a <strong>Doctor diagnosing a patient</strong>.</p>
         
         <p><strong>1. The Symptoms (Technical Indicators)</strong><br>
-        The "Technical Indicators" you see (RSI, Volatility, Trend Gap, Credit Spreads) are the symptoms. The model looks at all of them at once as a single "health profile" for the day.</p>
+        The "Technical Indicators" you see (RSI, Volatility, Trend Gap, Credit Spreads, <strong>Sentiment</strong>, <strong>Dollar</strong>) are the symptoms. The model looks at all of them at once as a single "health profile" for the day.</p>
         
         <p><strong>2. The Diagnosis (Deciding the Regime)</strong><br>
         The "Regime" is the medical condition. The model has studied 15+ years of history and learned that the market usually exists in one of 3 states (clusters):</p>

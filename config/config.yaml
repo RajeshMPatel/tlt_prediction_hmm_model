@@ -14,6 +14,8 @@ data:
   yfinance:
     tlt_symbol: "TLT"
     vix_symbol: "^VIX"
+    spy_symbol: "SPY"
+    dxy_symbol: "DX-Y.NYB"
     max_retries: 5
     retry_base_seconds: 2.0
     retry_backoff: 2.0
@@ -23,6 +25,8 @@ data:
     enabled: true
     tlt_symbol: "tlt.us"
     vix_symbol: "vi.f"
+    spy_symbol: "spy.us"
+    dxy_symbol: "dxy.f"
   fred:
     required_series:
       DGS2: "DGS2"
@@ -46,6 +50,8 @@ features:
   price_columns:
     tlt_close: "tlt_close"
     vix_close: "vix_close"
+    spy_close: "spy_close"
+    dxy_close: "dxy_close"
   fred_columns:
     us10y: "DGS10"
     curve_slope: "T10Y2Y"
@@ -59,6 +65,9 @@ features:
     - realized_vol_60d
     - tlt_rsi_14
     - vix_rsi_14
+    - synthetic_fear_greed
+    - dxy_return
+    - tlt_spy_corr_60d
     - tlt_mom_5
     - tlt_mom_20
     - vix_mom_5

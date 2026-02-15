@@ -531,6 +531,8 @@ def load_raw_data(
     start_date = cfg["data"]["start_date"]
     tlt_symbol = cfg["data"]["yfinance"]["tlt_symbol"]
     vix_symbol = cfg["data"]["yfinance"]["vix_symbol"]
+    spy_symbol = cfg["data"]["yfinance"].get("spy_symbol", "SPY")
+    dxy_symbol = cfg["data"]["yfinance"].get("dxy_symbol", "DX-Y.NYB")
     yf_cfg = cfg["data"].get("yfinance", {})
     max_retries = int(yf_cfg.get("max_retries", 5))
     retry_base_seconds = float(yf_cfg.get("retry_base_seconds", 2.0))
@@ -604,16 +606,98 @@ def load_raw_data(
             "warning": f"Used FRED VIXCLS due to market-source failure: {exc}",
         }
 
+    if request_pause_seconds > 0:
+        time.sleep(request_pause_seconds)
+
+    spy_df: pd.DataFrame
+    spy_meta: dict[str, Any]
+    try:
+        spy_df, spy_meta = download_yfinance_close(
+            symbol=spy_symbol,
+            column_name="spy_close",
+            raw_dir=raw_dir,
+            start_date=start_date,
+            force_refresh=force_refresh,
+            max_retries=max_retries,
+            retry_base_seconds=retry_base_seconds,
+            retry_backoff=retry_backoff,
+            stooq_enabled=stooq_enabled,
+            stooq_symbol=stooq_cfg.get("spy_symbol"),
+        )
+    except Exception as exc:  # noqa: BLE001
+        # SPY is critical for correlation, but we can survive without it (correlation=0)
+        spy_df = pd.DataFrame()
+        spy_meta = {
+            "source": "failed",
+            "symbol": spy_symbol,
+            "warning": f"Failed to download SPY: {exc}",
+        }
+
+    if request_pause_seconds > 0:
+        time.sleep(request_pause_seconds)
+
+    dxy_df: pd.DataFrame
+    dxy_meta: dict[str, Any]
+    try:
+        dxy_df, dxy_meta = download_yfinance_close(
+            symbol=dxy_symbol,
+            column_name="dxy_close",
+            raw_dir=raw_dir,
+            start_date=start_date,
+            force_refresh=force_refresh,
+            max_retries=max_retries,
+            retry_base_seconds=retry_base_seconds,
+            retry_backoff=retry_backoff,
+            stooq_enabled=stooq_enabled,
+            stooq_symbol=stooq_cfg.get("dxy_symbol"),
+        )
+    except Exception as exc:  # noqa: BLE001
+        # Fallback to FRED DTWEXBGS (Trade Weighted U.S. Dollar Index) if market data fails
+        try:
+            fred_key = os.getenv("FRED_API_KEY")
+            if fred_key:
+                fred = Fred(api_key=fred_key)
+                fred_dxy = fred.get_series("DTWEXBGS", observation_start=start_date)
+                if not fred_dxy.empty:
+                    dxy_df = fred_dxy.to_frame(name="dxy_close")
+                    dxy_df.index = pd.to_datetime(dxy_df.index).tz_localize(None)
+                    dxy_meta = {
+                        "source": "fred_dtwexbgs",
+                        "symbol": "DTWEXBGS",
+                        "warning": f"Used FRED Trade Weighted Dollar Index due to market-source failure: {exc}",
+                    }
+                else:
+                    raise RuntimeError("FRED DXY fallback empty")
+            else:
+                raise RuntimeError("No FRED key for fallback")
+        except Exception as fred_exc:
+            dxy_df = pd.DataFrame()
+            dxy_meta = {
+                "source": "failed",
+                "symbol": dxy_symbol,
+                "warning": f"Failed to download DXY (and FRED fallback): {exc} / {fred_exc}",
+            }
+
     tlt_df = _ensure_single_level_columns(tlt_df)
     vix_df = _ensure_single_level_columns(vix_df)
+    spy_df = _ensure_single_level_columns(spy_df)
+    dxy_df = _ensure_single_level_columns(dxy_df)
     fred_df = _ensure_single_level_columns(fred_df)
-    merged = tlt_df.join(vix_df, how="outer").join(fred_df, how="outer").sort_index()
+    merged = (
+        tlt_df.join(vix_df, how="outer")
+        .join(spy_df, how="outer")
+        .join(dxy_df, how="outer")
+        .join(fred_df, how="outer")
+        .sort_index()
+    )
     merged.index.name = "date"
     _save_parquet(merged, raw_dir / "merged_raw.parquet")
 
     metadata = {
         "tlt": tlt_meta,
         "vix": vix_meta,
+        "spy": spy_meta,
+        "dxy": dxy_meta,
         "fred": fred_meta,
         "last_timestamp": str(merged.index.max()) if not merged.empty else None,
         "rows": int(merged.shape[0]),

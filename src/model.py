@@ -112,6 +112,21 @@ def _build_regime_labels(
         if "realized_vol_60d" in train_frame.columns
         else np.full(train_frame.shape[0], np.nan, dtype=float)
     )
+    fear_greed_values = (
+        train_frame["synthetic_fear_greed"].values
+        if "synthetic_fear_greed" in train_frame.columns
+        else np.full(train_frame.shape[0], np.nan, dtype=float)
+    )
+    dxy_return_values = (
+        train_frame["dxy_return"].values
+        if "dxy_return" in train_frame.columns
+        else np.full(train_frame.shape[0], np.nan, dtype=float)
+    )
+    corr_values = (
+        train_frame["tlt_spy_corr_60d"].values
+        if "tlt_spy_corr_60d" in train_frame.columns
+        else np.full(train_frame.shape[0], np.nan, dtype=float)
+    )
 
     for idx, col in enumerate(train_posterior.columns):
         weights = train_posterior[col].values
@@ -129,6 +144,9 @@ def _build_regime_labels(
         avg_credit = _weighted_mean(weights, credit_values)
         avg_vol_5d = _weighted_mean(weights, vol_5d_values)
         avg_vol_60d = _weighted_mean(weights, vol_60d_values)
+        avg_fear_greed = _weighted_mean(weights, fear_greed_values)
+        avg_dxy_return = _weighted_mean(weights, dxy_return_values)
+        avg_corr = _weighted_mean(weights, corr_values)
         profiles.append(
             {
                 "key": col,
@@ -147,6 +165,9 @@ def _build_regime_labels(
                 "avg_vix_rsi_14": avg_vix_rsi_14,
                 "avg_inflation": avg_inflation,
                 "avg_credit": avg_credit,
+                "avg_synthetic_fear_greed": avg_fear_greed,
+                "avg_dxy_return": avg_dxy_return,
+                "avg_tlt_spy_corr_60d": avg_corr,
             }
         )
 
@@ -198,6 +219,9 @@ def _build_regime_labels(
         credit = p["avg_credit"]
         vol_5d = p["avg_realized_vol_5d"]
         vol_60d = p["avg_realized_vol_60d"]
+        fear_greed = p["avg_synthetic_fear_greed"]
+        dxy_ret = p["avg_dxy_return"]
+        corr = p["avg_tlt_spy_corr_60d"]
 
         tlt_trend_txt = (
             f"{tlt_gap * 100:.2f}% above 20d trend" if np.isfinite(tlt_gap) else "trend unavailable"
@@ -218,6 +242,9 @@ def _build_regime_labels(
         vix_rsi_txt = f"{vix_rsi:.1f}" if np.isfinite(vix_rsi) else "unavailable"
         inflation_txt = f"{inflation:.2f}%" if np.isfinite(inflation) else "unavailable"
         credit_txt = f"{credit:.2f}%" if np.isfinite(credit) else "unavailable"
+        fear_greed_txt = f"{fear_greed:.0f}" if np.isfinite(fear_greed) else "unavailable"
+        dxy_txt = f"{dxy_ret * 100:+.2f}%" if np.isfinite(dxy_ret) else "unavailable"
+        corr_txt = f"{corr:.2f}" if np.isfinite(corr) else "unavailable"
         
         # Determine if volatility is accelerating or decelerating
         vol_trend_txt = "stable"
@@ -245,10 +272,24 @@ def _build_regime_labels(
                 return "bearish momentum"
             return "neutral momentum"
 
+        def _sentiment_signal(score: float) -> str:
+            if not np.isfinite(score):
+                return "neutral"
+            if score <= 25:
+                return "extreme fear"
+            if score >= 75:
+                return "extreme greed"
+            if score <= 45:
+                return "fear"
+            if score >= 55:
+                return "greed"
+            return "neutral"
+
         tlt_trend_signal = _trend_signal(tlt_gap)
         vix_trend_signal = _trend_signal(vix_gap)
         tlt_rsi_signal = _rsi_signal(tlt_rsi)
         vix_rsi_signal = _rsi_signal(vix_rsi)
+        sentiment_signal = _sentiment_signal(fear_greed)
 
         technical_takeaways = [
             (
@@ -262,11 +303,13 @@ def _build_regime_labels(
                 else "VIX setup: neutral (insufficient data)"
             ),
             f"Volatility regime: {volume_level.lower()}, {vol_trend_txt}",
+            f"Sentiment: {sentiment_signal} ({fear_greed_txt})",
             (
                 f"Macro context: Inflation Exp {inflation_txt}, Credit Spread {credit_txt}"
                 if np.isfinite(inflation) or np.isfinite(credit)
                 else "Macro context: unavailable"
-            )
+            ),
+            f"Correlations: Stock/Bond {corr_txt}, Dollar {dxy_txt}"
         ]
         technical_reason_bullets = [
             f"TLT up frequency: {tlt_up:.2%}",
@@ -281,6 +324,7 @@ def _build_regime_labels(
             f"VIX technical position: {vix_trend_txt}, {vix_channel_txt}",
             f"RSI(14): TLT {tlt_rsi_txt}, VIX {vix_rsi_txt}",
             f"Macro: Inflation Exp {inflation_txt}, Credit Spread {credit_txt}",
+            f"Sentiment: {sentiment_signal} ({fear_greed_txt}), Stock/Bond Corr: {corr_txt}",
             us10y_txt,
         ]
         technical_reason = "; ".join(technical_reason_bullets)
@@ -319,6 +363,15 @@ def _build_regime_labels(
             ),
             "avg_vix_rsi_14": (
                 None if not np.isfinite(vix_rsi) else float(vix_rsi)
+            ),
+            "avg_synthetic_fear_greed": (
+                None if not np.isfinite(fear_greed) else float(fear_greed)
+            ),
+            "avg_dxy_return": (
+                None if not np.isfinite(dxy_ret) else float(dxy_ret)
+            ),
+            "avg_tlt_spy_corr_60d": (
+                None if not np.isfinite(corr) else float(corr)
             ),
         }
 
@@ -840,6 +893,7 @@ def run_hmm_direction_model(feature_df: pd.DataFrame, cfg: dict[str, Any]) -> HM
             "vix_20d_max_close": float(model_frame.loc[latest_idx, "vix_20d_max_close"]),
             "tlt_trend_gap_20": float(model_frame.loc[latest_idx, "tlt_trend_gap_20"]),
             "vix_trend_gap_20": float(model_frame.loc[latest_idx, "vix_trend_gap_20"]),
+            "synthetic_fear_greed": float(model_frame.loc[latest_idx, "synthetic_fear_greed"]),
         },
         "actionable_signals": actionable_signals,
         "backtest": backtest,

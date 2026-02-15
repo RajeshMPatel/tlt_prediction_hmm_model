@@ -1,8 +1,8 @@
 {
-  "generated_at_utc": "2026-02-15T02:25:32Z",
+  "generated_at_utc": "2026-02-15T03:49:15Z",
   "last_data_timestamp": "2026-02-13 00:00:00",
   "raw_rows": 5055,
-  "model_rows": 4458,
+  "model_rows": 4289,
   "actionable_signals": {
     "policy_enabled": true,
     "rolling_oos_rows": 1000,
@@ -11,8 +11,8 @@
       "asset": "TLT",
       "action": "SKIP",
       "direction": "UP",
-      "probability_up": 0.5381874527635094,
-      "confidence": 0.5381874527635094,
+      "probability_up": 0.5442720709520945,
+      "confidence": 0.5442720709520945,
       "selected_threshold": null,
       "expected_hit_rate": null,
       "coverage": null,
@@ -22,8 +22,8 @@
       "asset": "VIX",
       "action": "SKIP",
       "direction": "DOWN",
-      "probability_up": 0.47018387463630085,
-      "confidence": 0.5298161253636992,
+      "probability_up": 0.477257097238549,
+      "confidence": 0.522742902761451,
       "selected_threshold": null,
       "expected_hit_rate": null,
       "coverage": null,
@@ -78,6 +78,49 @@
       "source": "fred_vixcls",
       "symbol": "^VIX",
       "warning": "Used FRED VIXCLS due to market-source failure: No data returned from yfinance for ^VIX after retries/fallback. Details: {'attempts': 5, 'strategy': 'failed', 'attempt_details': [{'attempt': 1, 'status': 'error', 'error': 'HTTP Error 429: Too Many Requests'}, {'attempt': 2, 'status': 'error', 'error': 'HTTP Error 429: Too Many Requests'}, {'attempt': 3, 'status': 'error', 'error': 'HTTP Error 429: Too Many Requests'}, {'attempt': 4, 'status': 'error', 'error': 'HTTP Error 429: Too Many Requests'}, {'attempt': 5, 'status': 'error', 'error': 'HTTP Error 429: Too Many Requests'}], 'error': 'HTTP Error 429: Too Many Requests', 'stooq_error': 'No columns to parse from file'}"
+    },
+    "spy": {
+      "source": "download+cache",
+      "symbol": "SPY",
+      "path": "/Users/rajeshpatel/dev/stocks/tlt_vix_web/data/raw/spy_close.parquet",
+      "download_meta": {
+        "attempts": 5,
+        "strategy": "stooq",
+        "attempt_details": [
+          {
+            "attempt": 1,
+            "status": "error",
+            "error": "HTTP Error 429: Too Many Requests"
+          },
+          {
+            "attempt": 2,
+            "status": "error",
+            "error": "HTTP Error 429: Too Many Requests"
+          },
+          {
+            "attempt": 3,
+            "status": "error",
+            "error": "HTTP Error 429: Too Many Requests"
+          },
+          {
+            "attempt": 4,
+            "status": "error",
+            "error": "HTTP Error 429: Too Many Requests"
+          },
+          {
+            "attempt": 5,
+            "status": "error",
+            "error": "HTTP Error 429: Too Many Requests"
+          }
+        ],
+        "error": "HTTP Error 429: Too Many Requests",
+        "stooq_symbol": "spy.us"
+      }
+    },
+    "dxy": {
+      "source": "fred_dtwexbgs",
+      "symbol": "DTWEXBGS",
+      "warning": "Used FRED Trade Weighted Dollar Index due to market-source failure: No data returned from yfinance for DX-Y.NYB after retries/fallback. Details: {'attempts': 5, 'strategy': 'failed', 'attempt_details': [{'attempt': 1, 'status': 'error', 'error': 'HTTP Error 429: Too Many Requests'}, {'attempt': 2, 'status': 'error', 'error': 'HTTP Error 429: Too Many Requests'}, {'attempt': 3, 'status': 'error', 'error': 'HTTP Error 429: Too Many Requests'}, {'attempt': 4, 'status': 'error', 'error': 'HTTP Error 429: Too Many Requests'}, {'attempt': 5, 'status': 'error', 'error': 'HTTP Error 429: Too Many Requests'}], 'error': 'HTTP Error 429: Too Many Requests', 'stooq_error': 'No columns to parse from file'}"
     },
     "fred": {
       "path": "/Users/rajeshpatel/dev/stocks/tlt_vix_web/data/raw/fred_series.parquet",

@@ -20,6 +20,16 @@ def _rsi(series: pd.Series, window: int = 14) -> pd.Series:
     return rsi.fillna(50.0)
 
 
+def _min_max_scale(series: pd.Series, window: int = 125) -> pd.Series:
+    """Rolling min-max scaling to 0-100 range."""
+    roll_min = series.rolling(window).min()
+    roll_max = series.rolling(window).max()
+    # Avoid division by zero
+    denom = (roll_max - roll_min).replace(0.0, np.nan)
+    scaled = (series - roll_min) / denom
+    return scaled * 100.0
+
+
 def build_feature_dataset(raw_df: pd.DataFrame, cfg: dict[str, Any]) -> pd.DataFrame:
     """Create model features and H5 forward returns from merged raw data."""
     horizon = int(cfg["features"]["horizon_days"])
@@ -28,6 +38,8 @@ def build_feature_dataset(raw_df: pd.DataFrame, cfg: dict[str, Any]) -> pd.DataF
     df = raw_df.copy().sort_index()
     tlt_close_ffill = df["tlt_close"].ffill()
     vix_close_ffill = df["vix_close"].ffill()
+    spy_close_ffill = df.get("spy_close", pd.Series(np.nan, index=df.index)).ffill()
+    dxy_close_ffill = df.get("dxy_close", pd.Series(np.nan, index=df.index)).ffill()
 
     # Use forward-filled closes so weekend/holiday gaps do not invalidate
     # the next trading day's return and rolling volatility features.
@@ -38,6 +50,36 @@ def build_feature_dataset(raw_df: pd.DataFrame, cfg: dict[str, Any]) -> pd.DataF
     df[f"realized_vol_60d"] = df["tlt_return"].rolling(60).std() * np.sqrt(252)
     df["tlt_rsi_14"] = _rsi(tlt_close_ffill, window=14)
     df["vix_rsi_14"] = _rsi(vix_close_ffill, window=14)
+
+    # New Features: DXY and Correlation
+    df["dxy_return"] = dxy_close_ffill.pct_change()
+    # 60-day rolling correlation between TLT and SPY returns
+    spy_ret = spy_close_ffill.pct_change()
+    df["tlt_spy_corr_60d"] = df["tlt_return"].rolling(60).corr(spy_ret)
+
+    # Synthetic Fear & Greed Index (0-100)
+    # 1. VIX Component (Inverted: Low VIX = Greed/High Score)
+    # 2. SPY Momentum (Price vs 125d MA)
+    # 3. Credit Spread (Inverted: Low Spread = Greed/High Score)
+    
+    # VIX Score (Lower is better/greedier)
+    vix_norm = _min_max_scale(vix_close_ffill, window=125)
+    vix_score = 100.0 - vix_norm
+
+    # SPY Momentum Score
+    spy_ma_125 = spy_close_ffill.rolling(125).mean()
+    spy_mom = (spy_close_ffill / spy_ma_125) - 1.0
+    spy_score = _min_max_scale(spy_mom, window=125)
+
+    # Credit Score (Lower spread is better/greedier)
+    # Ensure we have credit spread data before using it
+    credit_series = df.get("BAMLH0A0HYM2", pd.Series(np.nan, index=df.index)).ffill()
+    credit_norm = _min_max_scale(credit_series, window=125)
+    credit_score = 100.0 - credit_norm
+
+    # Average the components available
+    df["synthetic_fear_greed"] = (vix_score + spy_score + credit_score) / 3.0
+    df["synthetic_fear_greed"] = df["synthetic_fear_greed"].ffill()
 
     # Trend and channel-style features.
     df["tlt_mom_5"] = tlt_close_ffill.pct_change(5)
