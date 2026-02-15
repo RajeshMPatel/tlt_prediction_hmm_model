@@ -6,10 +6,10 @@
   "train_rows": 4285,
   "score_rows": 4289,
   "probabilities": {
-    "tlt_up_h5": 0.5442720709520945,
-    "tlt_down_h5": 0.4557279290479055,
-    "vix_up_h5": 0.477257097238549,
-    "vix_down_h5": 0.522742902761451
+    "tlt_up_h5": 0.5450975642099909,
+    "tlt_down_h5": 0.4549024357900091,
+    "vix_up_h5": 0.47109267065096844,
+    "vix_down_h5": 0.5289073293490315
   },
   "regime_probabilities": {
     "Regime 1 - Medium (Normal) Volume": 4.1650234369718245e-13,
@@ -164,8 +164,8 @@
       "asset": "TLT",
       "action": "SKIP",
       "direction": "UP",
-      "probability_up": 0.5442720709520945,
-      "confidence": 0.5442720709520945,
+      "probability_up": 0.5450975642099909,
+      "confidence": 0.5450975642099909,
       "selected_threshold": null,
       "expected_hit_rate": null,
       "coverage": null,
@@ -175,8 +175,8 @@
       "asset": "VIX",
       "action": "SKIP",
       "direction": "DOWN",
-      "probability_up": 0.477257097238549,
-      "confidence": 0.522742902761451,
+      "probability_up": 0.47109267065096844,
+      "confidence": 0.5289073293490316,
       "selected_threshold": null,
       "expected_hit_rate": null,
       "coverage": null,
@@ -311,7 +311,7 @@
       }
     ]
   },
-  "generated_at_utc": "2026-02-15T03:49:15Z",
+  "generated_at_utc": "2026-02-15T22:17:08Z",
   "last_data_update": "2026-02-13 00:00:00",
   "charts": {
     "tlt_chart": "/Users/rajeshpatel/dev/stocks/tlt_vix_web/reports/charts/tlt_regime_chart.png",

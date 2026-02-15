@@ -381,13 +381,15 @@ def _build_regime_labels(
 def _build_hmm(
     model_cfg: dict[str, Any],
     n_regimes: int,
+    random_state: int | None = None,
 ) -> GaussianHMM:
     """Create a configured GaussianHMM instance."""
+    seed = int(model_cfg.get("random_state", 42)) if random_state is None else random_state
     return GaussianHMM(
         n_components=n_regimes,
         covariance_type=model_cfg.get("covariance_type", "full"),
         n_iter=int(model_cfg.get("n_iter", 500)),
-        random_state=int(model_cfg.get("random_state", 42)),
+        random_state=seed,
     )
 
 
@@ -396,11 +398,12 @@ def _fit_scaler_hmm_and_posterior(
     feature_cols: list[str],
     model_cfg: dict[str, Any],
     n_regimes: int,
+    random_state: int | None = None,
 ) -> tuple[StandardScaler, GaussianHMM, pd.DataFrame]:
     """Fit scaler/HMM on frame and return posterior probabilities."""
     scaler = StandardScaler()
     x_values = scaler.fit_transform(frame[feature_cols].values)
-    hmm = _build_hmm(model_cfg=model_cfg, n_regimes=n_regimes)
+    hmm = _build_hmm(model_cfg=model_cfg, n_regimes=n_regimes, random_state=random_state)
     hmm.fit(x_values)
     post = hmm.predict_proba(x_values)
     posterior_cols = [f"regime_{i}" for i in range(n_regimes)]
@@ -806,42 +809,75 @@ def run_hmm_direction_model(feature_df: pd.DataFrame, cfg: dict[str, Any]) -> HM
     score_required = feature_cols + ["tlt_close", "vix_close"]
     train_frame = feature_df.dropna(subset=train_required).copy()
     score_frame = feature_df.dropna(subset=score_required).copy()
+    ensemble_size = int(model_cfg.get("ensemble_size", 1))
 
     if train_frame.empty:
         raise RuntimeError("Not enough non-null rows after feature/target filtering.")
     if score_frame.empty:
         raise RuntimeError("Not enough non-null rows for live scoring.")
 
-    scaler, hmm, train_posterior = _fit_scaler_hmm_and_posterior(
-        frame=train_frame,
-        feature_cols=feature_cols,
-        model_cfg=model_cfg,
-        n_regimes=n_regimes,
-    )
-    train_posterior = _apply_smoothing(train_posterior, model_cfg=model_cfg)
+    # Ensemble Loop
+    ensemble_probs: list[pd.DataFrame] = []
+    base_seed = int(model_cfg.get("random_state", 42))
+    representative_model = {}
+    
+    for i in range(ensemble_size):
+        seed = base_seed + i
+        scaler, hmm, train_posterior = _fit_scaler_hmm_and_posterior(
+            frame=train_frame,
+            feature_cols=feature_cols,
+            model_cfg=model_cfg,
+            n_regimes=n_regimes,
+            random_state=seed,
+        )
+        train_posterior = _apply_smoothing(train_posterior, model_cfg=model_cfg)
+        
+        tlt_up_train = (train_frame["tlt_forward_h5_return"].values > 0).astype(float)
+        vix_up_train = (train_frame["vix_forward_h5_return"].values > 0).astype(float)
+        regime_table = _compute_regime_up_table(train_posterior, tlt_up_train, vix_up_train)
+        
+        x_score = scaler.transform(score_frame[feature_cols].values)
+        score_post_arr = hmm.predict_proba(x_score)
+        posterior_cols = [f"regime_{j}" for j in range(n_regimes)]
+        posterior_df = pd.DataFrame(score_post_arr, index=score_frame.index, columns=posterior_cols)
+        posterior_df = _apply_smoothing(posterior_df, model_cfg=model_cfg)
+        
+        model_frame_i = _attach_directional_probabilities(
+            score_frame=score_frame,
+            posterior_df=posterior_df,
+            regime_table=regime_table,
+        )
+        # Keep only the probability columns for averaging
+        prob_cols = ["p_tlt_up_h5", "p_tlt_down_h5", "p_vix_up_h5", "p_vix_down_h5"]
+        ensemble_probs.append(model_frame_i[prob_cols])
+        
+        # Store the first model (seed=base) as the "Representative" model for Regime Definitions
+        if i == 0:
+            representative_model = {
+                "train_posterior": train_posterior,
+                "regime_table": regime_table,
+                "posterior_df": posterior_df,
+                "model_frame": model_frame_i
+            }
 
-    x_score = scaler.transform(score_frame[feature_cols].values)
-    score_post_arr = hmm.predict_proba(x_score)
-    posterior_cols = [f"regime_{i}" for i in range(n_regimes)]
-    posterior_df = pd.DataFrame(score_post_arr, index=score_frame.index, columns=posterior_cols)
-    posterior_df = _apply_smoothing(posterior_df, model_cfg=model_cfg)
-
-    tlt_up_train = (train_frame["tlt_forward_h5_return"].values > 0).astype(float)
-    vix_up_train = (train_frame["vix_forward_h5_return"].values > 0).astype(float)
-    regime_table = _compute_regime_up_table(train_posterior, tlt_up_train, vix_up_train)
+    # Average the probabilities across the ensemble
+    avg_probs = pd.concat(ensemble_probs).groupby(level=0).mean()
+    
+    # Use the representative model for regime labels and structure
+    # But overwrite the final directional probabilities with the ensemble average
+    model_frame = representative_model["model_frame"].copy()
+    for col in avg_probs.columns:
+        model_frame[col] = avg_probs[col]
+        
     regime_label_map, regime_profiles = _build_regime_labels(
         train_frame=train_frame,
-        train_posterior=train_posterior,
-        regime_table=regime_table,
-    )
-    model_frame = _attach_directional_probabilities(
-        score_frame=score_frame,
-        posterior_df=posterior_df,
-        regime_table=regime_table,
+        train_posterior=representative_model["train_posterior"],
+        regime_table=representative_model["regime_table"],
     )
 
     latest_idx = model_frame.index.max()
-    latest_posterior = posterior_df.loc[latest_idx]
+    latest_posterior = representative_model["posterior_df"].loc[latest_idx]
+    posterior_cols = [f"regime_{j}" for j in range(n_regimes)]
     technical_regime_probs = {col: float(latest_posterior[col]) for col in posterior_cols}
     friendly_regime_probs = {
         regime_label_map.get(key, key): value

@@ -84,6 +84,7 @@ features:
 
 model:
   n_regimes: 3
+  ensemble_size: 10
   covariance_type: full
   n_iter: 500
   random_state: 42
