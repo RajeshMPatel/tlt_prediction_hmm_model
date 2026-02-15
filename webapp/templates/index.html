@@ -52,7 +52,7 @@
   <div class="card">
     <h1>TLT / VIX H5 Probabilities</h1>
     {% if has_data %}
-      <p class="muted">Date: <strong>{{ payload.date }}</strong></p>
+      <p class="muted">Date: <strong>{{ payload.date }}</strong> (H5 = Forecast for next 5 trading days)</p>
       <div class="grid">
         <div class="tile"><div class="k">P(TLT up H5)</div><div class="v">{{ "%.2f%%"|format(payload.probabilities.tlt_up_h5 * 100) }}</div></div>
         <div class="tile"><div class="k">P(TLT down H5)</div><div class="v">{{ "%.2f%%"|format(payload.probabilities.tlt_down_h5 * 100) }}</div></div>
@@ -267,8 +267,10 @@
         </ul>
         <p>It compares today's "symptoms" against these definitions to decide the current regime (e.g., "Today matches Regime 1 with 98% certainty").</p>
 
-        <p><strong>3. The Prognosis (Predicting the Next 5 Days)</strong><br>
-        The HMM predicts by <strong>historical precedent</strong>. Once it knows the diagnosis (e.g., Regime 1), it asks: <em>"In the past 15 years, every time the market was in Regime 1, what happened next?"</em></p>
+        <p><strong>3. The Prognosis ("H5" = Next 5 Days)</strong><br>
+        "H5" stands for the <strong>5-day forecast horizon</strong> (one trading week). The model predicts the probability of the price being higher or lower 5 days from now, rather than just tomorrow. This captures swing trends rather than daily noise.</p>
+
+        <p>The HMM predicts by <strong>historical precedent</strong>. Once it knows the diagnosis (e.g., Regime 1), it asks: <em>"In the past 15 years, every time the market was in Regime 1, what happened next?"</em></p>
         <ul>
           <li>It calculates the historical win rate for that regime (e.g., "TLT went UP 54% of the time").</li>
           <li>It combines this with the certainty of the diagnosis to produce the final probability.</li>
