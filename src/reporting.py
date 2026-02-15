@@ -124,6 +124,7 @@ def write_daily_outputs(
         "last_data_timestamp": pipeline_meta.get("last_data_timestamp"),
         "raw_rows": pipeline_meta.get("raw_rows"),
         "model_rows": pipeline_meta.get("model_rows"),
+        "actionable_signals": latest_payload.get("actionable_signals", {}),
         "warnings": pipeline_meta.get("warnings", []),
         "sources": pipeline_meta.get("sources", {}),
         "debug": pipeline_meta.get("debug", {}),

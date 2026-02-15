@@ -13,6 +13,13 @@
     .k { font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: .04em; margin-bottom: 6px; }
     .v { font-size: 24px; font-weight: 700; }
     .muted { color: #6b7280; }
+    .signal-grid { display: grid; grid-template-columns: repeat(2, minmax(220px, 1fr)); gap: 12px; margin: 12px 0 8px; }
+    .signal { border-radius: 10px; border: 1px solid #e5e7eb; padding: 12px; background: #f9fafb; }
+    .signal-action { font-size: 22px; font-weight: 800; margin: 6px 0; }
+    .signal-meta { font-size: 13px; color: #4b5563; margin-top: 6px; line-height: 1.4; }
+    .strong { color: #0f766e; }
+    .moderate { color: #1d4ed8; }
+    .skip { color: #b45309; }
     ul { margin-top: 8px; }
   </style>
 </head>
@@ -27,6 +34,48 @@
         <div class="tile"><div class="k">P(VIX up H5)</div><div class="v">{{ "%.2f%%"|format(payload.probabilities.vix_up_h5 * 100) }}</div></div>
         <div class="tile"><div class="k">P(VIX down H5)</div><div class="v">{{ "%.2f%%"|format(payload.probabilities.vix_down_h5 * 100) }}</div></div>
       </div>
+
+      {% if payload.actionable_signals and payload.actionable_signals.policy_enabled %}
+      <h3>Today Action Signals</h3>
+      <div class="signal-grid">
+        {% set tlt_signal = payload.actionable_signals.tlt %}
+        {% set tlt_class = 'skip' %}
+        {% if tlt_signal.action.startswith('STRONG') %}{% set tlt_class = 'strong' %}{% endif %}
+        {% if tlt_signal.action.startswith('MODERATE') %}{% set tlt_class = 'moderate' %}{% endif %}
+        <div class="signal">
+          <div class="k">TLT Signal</div>
+          <div class="signal-action {{ tlt_class }}">{{ tlt_signal.action }}</div>
+          <div class="signal-meta">
+            Confidence: {{ "%.2f%%"|format(tlt_signal.confidence * 100) if tlt_signal.confidence is not none else "N/A" }}<br/>
+            {% if tlt_signal.expected_hit_rate is not none %}
+            Recent hit rate at this confidence: {{ "%.2f%%"|format(tlt_signal.expected_hit_rate * 100) }}<br/>
+            Coverage: {{ "%.2f%%"|format(tlt_signal.coverage * 100) }}
+            {% else %}
+            Reason: {{ tlt_signal.reason }}
+            {% endif %}
+          </div>
+        </div>
+
+        {% set vix_signal = payload.actionable_signals.vix %}
+        {% set vix_class = 'skip' %}
+        {% if vix_signal.action.startswith('STRONG') %}{% set vix_class = 'strong' %}{% endif %}
+        {% if vix_signal.action.startswith('MODERATE') %}{% set vix_class = 'moderate' %}{% endif %}
+        <div class="signal">
+          <div class="k">VIX Signal</div>
+          <div class="signal-action {{ vix_class }}">{{ vix_signal.action }}</div>
+          <div class="signal-meta">
+            Confidence: {{ "%.2f%%"|format(vix_signal.confidence * 100) if vix_signal.confidence is not none else "N/A" }}<br/>
+            {% if vix_signal.expected_hit_rate is not none %}
+            Recent hit rate at this confidence: {{ "%.2f%%"|format(vix_signal.expected_hit_rate * 100) }}<br/>
+            Coverage: {{ "%.2f%%"|format(vix_signal.coverage * 100) }}
+            {% else %}
+            Reason: {{ vix_signal.reason }}
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      <p class="muted">Interpretation: STRONG = highest-confidence setup, MODERATE = usable edge, SKIP = no reliable edge today.</p>
+      {% endif %}
 
       <h3>Regime Probabilities</h3>
       <ul>

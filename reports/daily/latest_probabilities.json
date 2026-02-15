@@ -12,11 +12,37 @@
     "vix_down_h5": 0.5325881965183674
   },
   "regime_probabilities": {
+    "Low-Vol Mixed Transition [1]": 0.9853885643562815,
+    "High-Vol Mixed Transition [2]": 9.78732795182025e-06,
+    "Mixed Transition [3]": 0.014601648315766637
+  },
+  "regime_probabilities_raw": {
     "regime_0": 0.9853885643562815,
     "regime_1": 9.78732795182025e-06,
     "regime_2": 0.014601648315766637
   },
-  "most_likely_regime": "regime_0",
+  "regime_definitions": {
+    "Low-Vol Mixed Transition [1]": {
+      "technical_key": "regime_0",
+      "tlt_up_freq": 0.5351438985607578,
+      "vix_up_freq": 0.46723710082658204,
+      "avg_realized_vol_20d": 0.11841816825299147
+    },
+    "High-Vol Mixed Transition [2]": {
+      "technical_key": "regime_1",
+      "tlt_up_freq": 0.5309112184973093,
+      "vix_up_freq": 0.36269068318743874,
+      "avg_realized_vol_20d": 0.20766892281902136
+    },
+    "Mixed Transition [3]": {
+      "technical_key": "regime_2",
+      "tlt_up_freq": 0.5255414355174148,
+      "vix_up_freq": 0.4792717616625378,
+      "avg_realized_vol_20d": 0.13793223152867048
+    }
+  },
+  "most_likely_regime": "Low-Vol Mixed Transition [1]",
+  "most_likely_regime_key": "regime_0",
   "market_context": {
     "tlt_close": 89.23,
     "vix_close": 20.81999969482422,
@@ -26,6 +52,33 @@
     "vix_20d_max_close": 21.770000457763672,
     "tlt_trend_gap_20": 0.02081091168549576,
     "vix_trend_gap_20": 0.18177945882968238
+  },
+  "actionable_signals": {
+    "policy_enabled": true,
+    "rolling_oos_rows": 1000,
+    "min_bucket_rows": 120,
+    "tlt": {
+      "asset": "TLT",
+      "action": "SKIP",
+      "direction": "UP",
+      "probability_up": 0.5350036453458059,
+      "confidence": 0.5350036453458059,
+      "selected_threshold": null,
+      "expected_hit_rate": null,
+      "coverage": null,
+      "reason": "no_valid_confidence_bucket"
+    },
+    "vix": {
+      "asset": "VIX",
+      "action": "SKIP",
+      "direction": "DOWN",
+      "probability_up": 0.4674118034816326,
+      "confidence": 0.5325881965183674,
+      "selected_threshold": null,
+      "expected_hit_rate": null,
+      "coverage": null,
+      "reason": "no_valid_confidence_bucket"
+    }
   },
   "backtest": {
     "enabled": true,
@@ -53,6 +106,26 @@
           "rows": 0,
           "hit_rate": null
         }
+      },
+      "recent_confidence_buckets": {
+        "rows_considered": 1000,
+        "confidence_buckets": {
+          "ge_0.55": {
+            "coverage": 0.206,
+            "rows": 206,
+            "hit_rate": 0.5194174757281553
+          },
+          "ge_0.60": {
+            "coverage": 0.0,
+            "rows": 0,
+            "hit_rate": null
+          },
+          "ge_0.65": {
+            "coverage": 0.0,
+            "rows": 0,
+            "hit_rate": null
+          }
+        }
       }
     },
     "vix": {
@@ -74,6 +147,26 @@
           "coverage": 0.0,
           "rows": 0,
           "hit_rate": null
+        }
+      },
+      "recent_confidence_buckets": {
+        "rows_considered": 1000,
+        "confidence_buckets": {
+          "ge_0.55": {
+            "coverage": 0.685,
+            "rows": 685,
+            "hit_rate": 0.581021897810219
+          },
+          "ge_0.60": {
+            "coverage": 0.192,
+            "rows": 192,
+            "hit_rate": 0.7083333333333334
+          },
+          "ge_0.65": {
+            "coverage": 0.0,
+            "rows": 0,
+            "hit_rate": null
+          }
         }
       }
     },
@@ -115,7 +208,7 @@
       }
     ]
   },
-  "generated_at_utc": "2026-02-14T07:53:51Z",
+  "generated_at_utc": "2026-02-15T01:36:32Z",
   "last_data_update": "2026-02-13 00:00:00",
   "charts": {
     "tlt_chart": "/Users/rajeshpatel/dev/stocks/tlt_vix_web/reports/charts/tlt_regime_chart.png",

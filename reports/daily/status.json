@@ -1,8 +1,35 @@
 {
-  "generated_at_utc": "2026-02-14T07:53:51Z",
+  "generated_at_utc": "2026-02-15T01:36:32Z",
   "last_data_timestamp": "2026-02-13 00:00:00",
   "raw_rows": 4990,
   "model_rows": 4549,
+  "actionable_signals": {
+    "policy_enabled": true,
+    "rolling_oos_rows": 1000,
+    "min_bucket_rows": 120,
+    "tlt": {
+      "asset": "TLT",
+      "action": "SKIP",
+      "direction": "UP",
+      "probability_up": 0.5350036453458059,
+      "confidence": 0.5350036453458059,
+      "selected_threshold": null,
+      "expected_hit_rate": null,
+      "coverage": null,
+      "reason": "no_valid_confidence_bucket"
+    },
+    "vix": {
+      "asset": "VIX",
+      "action": "SKIP",
+      "direction": "DOWN",
+      "probability_up": 0.4674118034816326,
+      "confidence": 0.5325881965183674,
+      "selected_threshold": null,
+      "expected_hit_rate": null,
+      "coverage": null,
+      "reason": "no_valid_confidence_bucket"
+    }
+  },
   "warnings": [
     "Failed FRED series DGS2 (DGS2).",
     "Failed FRED series DGS10 (DGS10).",

@@ -70,6 +70,25 @@ model:
   random_state: 42
   backtest_splits: 5
   backtest_min_train_rows: 500
+  decision_policy:
+    enabled: true
+    rolling_oos_rows: 1000
+    min_bucket_rows: 120
+    neutral_band: 0.02
+    thresholds:
+      - 0.55
+      - 0.60
+      - 0.65
+    strong:
+      min_hit_rate: 0.62
+      candidate_thresholds:
+        - 0.65
+        - 0.60
+    moderate:
+      min_hit_rate: 0.55
+      candidate_thresholds:
+        - 0.60
+        - 0.55
   smoothing:
     enabled: true
     span: 3

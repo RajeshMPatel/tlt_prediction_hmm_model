@@ -47,6 +47,19 @@ Pipeline output includes:
 - Processed datasets in `data/processed/`
 - Out-of-sample backtest metrics (time-series splits) under `latest_probabilities.json -> backtest`
 - Confidence-bucket accuracy (`>=0.55`, `>=0.60`, `>=0.65`) under `backtest -> tlt/vix -> confidence_buckets`
+- Action labels under `latest_probabilities.json -> actionable_signals`:
+  - `STRONG_UP` / `STRONG_DOWN`
+  - `MODERATE_UP` / `MODERATE_DOWN`
+  - `SKIP`
+
+### How to use daily signals (plain English)
+
+- `STRONG_*`: highest-confidence setup based on recent out-of-sample buckets.
+- `MODERATE_*`: usable but weaker edge than strong signals.
+- `SKIP`: model does not see a reliable edge for today.
+- `confidence` is the model certainty (`max(P_up, P_down)`).
+- `expected_hit_rate` is recent backtested directional accuracy at that confidence bucket.
+- `coverage` is how often that confidence bucket appears historically (lower means rarer signal).
 
 ## Run web app
 
@@ -56,8 +69,8 @@ bash scripts/run_server.sh
 
 Open:
 
-- `http://127.0.0.1:8000/`
-- `http://127.0.0.1:8000/status`
+- `http://127.0.0.1:4000/`
+- `http://127.0.0.1:4000/status`
 
 ## Cron automation (weekday mornings)
 
