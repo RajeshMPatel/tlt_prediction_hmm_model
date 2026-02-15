@@ -49,12 +49,37 @@ def _build_regime_labels(
     train_posterior: pd.DataFrame,
     regime_table: pd.DataFrame,
 ) -> tuple[dict[str, str], dict[str, dict[str, Any]]]:
-    """Create human-readable regime names from regime behavior."""
+    """Create human-readable regime names from volume + status behavior."""
     profiles: list[dict[str, Any]] = []
     has_vol = "realized_vol_20d" in train_frame.columns
     vol_values = (
         train_frame["realized_vol_20d"].values
         if has_vol
+        else np.full(train_frame.shape[0], np.nan, dtype=float)
+    )
+    tlt_trend_gap_values = (
+        train_frame["tlt_trend_gap_20"].values
+        if "tlt_trend_gap_20" in train_frame.columns
+        else np.full(train_frame.shape[0], np.nan, dtype=float)
+    )
+    vix_trend_gap_values = (
+        train_frame["vix_trend_gap_20"].values
+        if "vix_trend_gap_20" in train_frame.columns
+        else np.full(train_frame.shape[0], np.nan, dtype=float)
+    )
+    tlt_channel_values = (
+        train_frame["tlt_channel_pos_20"].values
+        if "tlt_channel_pos_20" in train_frame.columns
+        else np.full(train_frame.shape[0], np.nan, dtype=float)
+    )
+    vix_channel_values = (
+        train_frame["vix_channel_pos_20"].values
+        if "vix_channel_pos_20" in train_frame.columns
+        else np.full(train_frame.shape[0], np.nan, dtype=float)
+    )
+    us10y_change_values = (
+        train_frame["us10y_change"].values
+        if "us10y_change" in train_frame.columns
         else np.full(train_frame.shape[0], np.nan, dtype=float)
     )
 
@@ -63,6 +88,11 @@ def _build_regime_labels(
         tlt_up = float(regime_table.loc[idx, "tlt_up_freq"])
         vix_up = float(regime_table.loc[idx, "vix_up_freq"])
         avg_vol = _weighted_mean(weights, vol_values)
+        avg_tlt_trend_gap = _weighted_mean(weights, tlt_trend_gap_values)
+        avg_vix_trend_gap = _weighted_mean(weights, vix_trend_gap_values)
+        avg_tlt_channel_pos = _weighted_mean(weights, tlt_channel_values)
+        avg_vix_channel_pos = _weighted_mean(weights, vix_channel_values)
+        avg_us10y_change = _weighted_mean(weights, us10y_change_values)
         profiles.append(
             {
                 "key": col,
@@ -70,6 +100,11 @@ def _build_regime_labels(
                 "tlt_up_freq": tlt_up,
                 "vix_up_freq": vix_up,
                 "avg_realized_vol_20d": avg_vol,
+                "avg_tlt_trend_gap_20": avg_tlt_trend_gap,
+                "avg_vix_trend_gap_20": avg_vix_trend_gap,
+                "avg_tlt_channel_pos_20": avg_tlt_channel_pos,
+                "avg_vix_channel_pos_20": avg_vix_channel_pos,
+                "avg_us10y_change": avg_us10y_change,
             }
         )
 
@@ -86,29 +121,82 @@ def _build_regime_labels(
         avg_vol = p["avg_realized_vol_20d"]
 
         if tlt_up >= 0.55 and vix_up <= 0.45:
-            base = "Calm Risk-On"
+            status = "Bond Strength, Volatility Cooling"
+            interpretation = "Historically, TLT tends to rise while VIX tends to ease."
         elif tlt_up <= 0.45 and vix_up >= 0.55:
-            base = "Stress Risk-Off"
+            status = "Bond Weakness, Volatility Stress"
+            interpretation = "Historically, TLT tends to weaken while VIX tends to rise."
         elif tlt_up <= 0.45 and vix_up <= 0.45:
-            base = "Growth Risk-On"
+            status = "Broad Softness"
+            interpretation = "Both TLT and VIX have tended to drift lower."
         elif tlt_up >= 0.55 and vix_up >= 0.55:
-            base = "Cross-Asset Flight-to-Quality"
+            status = "Defensive Bid"
+            interpretation = "Both TLT and VIX have tended to rise together."
         else:
-            base = "Mixed Transition"
+            status = "Sideways / Unclear"
+            interpretation = "No strong directional edge; mixed behavior."
 
+        volume_level = "Medium"
         if np.isfinite(avg_vol) and np.isfinite(high_vol_cut) and avg_vol >= high_vol_cut:
-            base = f"High-Vol {base}"
+            volume_level = "High (Turbulent)"
         elif np.isfinite(avg_vol) and np.isfinite(low_vol_cut) and avg_vol <= low_vol_cut:
-            base = f"Low-Vol {base}"
+            volume_level = "Low (Calm)"
+        else:
+            volume_level = "Medium (Normal)"
 
-        label = f"{base} [{p['regime_idx'] + 1}]"
+        label = f"Volume: {volume_level} | Status: {status} [{p['regime_idx'] + 1}]"
+        tlt_gap = p["avg_tlt_trend_gap_20"]
+        vix_gap = p["avg_vix_trend_gap_20"]
+        tlt_ch = p["avg_tlt_channel_pos_20"]
+        vix_ch = p["avg_vix_channel_pos_20"]
+        us10y_chg = p["avg_us10y_change"]
+        tlt_trend_txt = (
+            f"{tlt_gap * 100:.2f}% above 20d trend" if np.isfinite(tlt_gap) else "trend unavailable"
+        )
+        vix_trend_txt = (
+            f"{vix_gap * 100:.2f}% above 20d trend" if np.isfinite(vix_gap) else "trend unavailable"
+        )
+        tlt_channel_txt = (
+            f"{tlt_ch * 100:.0f}% of 20d range" if np.isfinite(tlt_ch) else "range position unavailable"
+        )
+        vix_channel_txt = (
+            f"{vix_ch * 100:.0f}% of 20d range" if np.isfinite(vix_ch) else "range position unavailable"
+        )
+        us10y_txt = (
+            f"US10Y change {us10y_chg:+.3f}" if np.isfinite(us10y_chg) else "US10Y change unavailable"
+        )
+        technical_reason = (
+            f"TLT up frequency {tlt_up:.2%}, VIX up frequency {vix_up:.2%}; "
+            f"TLT is {tlt_trend_txt} ({tlt_channel_txt}), "
+            f"VIX is {vix_trend_txt} ({vix_channel_txt}), {us10y_txt}."
+        )
+
         label_map[p["key"]] = label
         profile_out[label] = {
             "technical_key": p["key"],
+            "volume_level": volume_level,
+            "status": status,
+            "interpretation": interpretation,
+            "technical_reason": technical_reason,
             "tlt_up_freq": float(tlt_up),
             "vix_up_freq": float(vix_up),
             "avg_realized_vol_20d": (
                 None if not np.isfinite(avg_vol) else float(avg_vol)
+            ),
+            "avg_tlt_trend_gap_20": (
+                None if not np.isfinite(tlt_gap) else float(tlt_gap)
+            ),
+            "avg_vix_trend_gap_20": (
+                None if not np.isfinite(vix_gap) else float(vix_gap)
+            ),
+            "avg_tlt_channel_pos_20": (
+                None if not np.isfinite(tlt_ch) else float(tlt_ch)
+            ),
+            "avg_vix_channel_pos_20": (
+                None if not np.isfinite(vix_ch) else float(vix_ch)
+            ),
+            "avg_us10y_change": (
+                None if not np.isfinite(us10y_chg) else float(us10y_chg)
             ),
         }
 
