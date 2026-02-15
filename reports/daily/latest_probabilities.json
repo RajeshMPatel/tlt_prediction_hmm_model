@@ -6,20 +6,20 @@
   "train_rows": 4545,
   "score_rows": 4549,
   "probabilities": {
-    "tlt_up_h5": 0.5350036453458059,
-    "tlt_down_h5": 0.4649963546541941,
-    "vix_up_h5": 0.4674118034816326,
-    "vix_down_h5": 0.5325881965183674
+    "tlt_up_h5": 0.5350036453457675,
+    "tlt_down_h5": 0.4649963546542325,
+    "vix_up_h5": 0.46741180348166145,
+    "vix_down_h5": 0.5325881965183386
   },
   "regime_probabilities": {
-    "Volume: Low (Calm) | Status: Sideways / Unclear [1]": 0.9853885643562815,
-    "Volume: High (Turbulent) | Status: Sideways / Unclear [2]": 9.78732795182025e-06,
-    "Volume: Medium (Normal) | Status: Sideways / Unclear [3]": 0.014601648315766637
+    "Volume: Low (Calm) | Status: Sideways / Unclear [1]": 0.9853885643562813,
+    "Volume: High (Turbulent) | Status: Sideways / Unclear [2]": 9.787327952028913e-06,
+    "Volume: Medium (Normal) | Status: Sideways / Unclear [3]": 0.014601648315766602
   },
   "regime_probabilities_raw": {
-    "regime_0": 0.9853885643562815,
-    "regime_1": 9.78732795182025e-06,
-    "regime_2": 0.014601648315766637
+    "regime_0": 0.9853885643562813,
+    "regime_1": 9.787327952028913e-06,
+    "regime_2": 0.014601648315766602
   },
   "regime_definitions": {
     "Volume: Low (Calm) | Status: Sideways / Unclear [1]": {
@@ -28,14 +28,14 @@
       "status": "Sideways / Unclear",
       "interpretation": "No strong directional edge; mixed behavior.",
       "technical_reason": "TLT up frequency 53.51%, VIX up frequency 46.72%; TLT is 1.20% above 20d trend (78% of 20d range), VIX is 0.70% above 20d trend (40% of 20d range), US10Y change -0.004.",
-      "tlt_up_freq": 0.5351438985607578,
-      "vix_up_freq": 0.46723710082658204,
-      "avg_realized_vol_20d": 0.11841816825299147,
-      "avg_tlt_trend_gap_20": 0.011950413090184148,
-      "avg_vix_trend_gap_20": 0.007010789703158188,
-      "avg_tlt_channel_pos_20": 0.7810244827539692,
-      "avg_vix_channel_pos_20": 0.399406363786981,
-      "avg_us10y_change": -0.003543409823360881
+      "tlt_up_freq": 0.5351438985607191,
+      "vix_up_freq": 0.46723710082661185,
+      "avg_realized_vol_20d": 0.11841816825300157,
+      "avg_tlt_trend_gap_20": 0.011950413090180655,
+      "avg_vix_trend_gap_20": 0.007010789703122159,
+      "avg_tlt_channel_pos_20": 0.7810244827538848,
+      "avg_vix_channel_pos_20": 0.3994063637869002,
+      "avg_us10y_change": -0.0035434098233523502
     },
     "Volume: High (Turbulent) | Status: Sideways / Unclear [2]": {
       "technical_key": "regime_1",
@@ -43,14 +43,14 @@
       "status": "Sideways / Unclear",
       "interpretation": "No strong directional edge; mixed behavior.",
       "technical_reason": "TLT up frequency 53.09%, VIX up frequency 36.27%; TLT is 1.16% above 20d trend (58% of 20d range), VIX is 12.25% above 20d trend (52% of 20d range), US10Y change -0.005.",
-      "tlt_up_freq": 0.5309112184973093,
-      "vix_up_freq": 0.36269068318743874,
-      "avg_realized_vol_20d": 0.20766892281902136,
-      "avg_tlt_trend_gap_20": 0.011593087026643273,
-      "avg_vix_trend_gap_20": 0.12246135025943791,
-      "avg_tlt_channel_pos_20": 0.5753057959437804,
-      "avg_vix_channel_pos_20": 0.5192155868039701,
-      "avg_us10y_change": -0.005228347050920844
+      "tlt_up_freq": 0.5309112184974534,
+      "vix_up_freq": 0.36269068318743847,
+      "avg_realized_vol_20d": 0.20766892281901558,
+      "avg_tlt_trend_gap_20": 0.011593087026641417,
+      "avg_vix_trend_gap_20": 0.12246135025949519,
+      "avg_tlt_channel_pos_20": 0.5753057959437617,
+      "avg_vix_channel_pos_20": 0.5192155868040824,
+      "avg_us10y_change": -0.005228347050934795
     },
     "Volume: Medium (Normal) | Status: Sideways / Unclear [3]": {
       "technical_key": "regime_2",
@@ -58,14 +58,14 @@
       "status": "Sideways / Unclear",
       "interpretation": "No strong directional edge; mixed behavior.",
       "technical_reason": "TLT up frequency 52.55%, VIX up frequency 47.93%; TLT is -1.16% above 20d trend (26% of 20d range), VIX is -2.81% above 20d trend (33% of 20d range), US10Y change +0.004.",
-      "tlt_up_freq": 0.5255414355174148,
-      "vix_up_freq": 0.4792717616625378,
-      "avg_realized_vol_20d": 0.13793223152867048,
-      "avg_tlt_trend_gap_20": -0.011560218735386932,
-      "avg_vix_trend_gap_20": -0.02810868360681669,
-      "avg_tlt_channel_pos_20": 0.25743465605521054,
-      "avg_vix_channel_pos_20": 0.3346518141074883,
-      "avg_us10y_change": 0.004265114996686537
+      "tlt_up_freq": 0.5255414355174053,
+      "vix_up_freq": 0.4792717616625091,
+      "avg_realized_vol_20d": 0.13793223152867198,
+      "avg_tlt_trend_gap_20": -0.011560218735389514,
+      "avg_vix_trend_gap_20": -0.028108683606804886,
+      "avg_tlt_channel_pos_20": 0.25743465605514393,
+      "avg_vix_channel_pos_20": 0.3346518141075175,
+      "avg_us10y_change": 0.004265114996684812
     }
   },
   "most_likely_regime": "Volume: Low (Calm) | Status: Sideways / Unclear [1]",
@@ -88,8 +88,8 @@
       "asset": "TLT",
       "action": "SKIP",
       "direction": "UP",
-      "probability_up": 0.5350036453458059,
-      "confidence": 0.5350036453458059,
+      "probability_up": 0.5350036453457675,
+      "confidence": 0.5350036453457675,
       "selected_threshold": null,
       "expected_hit_rate": null,
       "coverage": null,
@@ -99,8 +99,8 @@
       "asset": "VIX",
       "action": "SKIP",
       "direction": "DOWN",
-      "probability_up": 0.4674118034816326,
-      "confidence": 0.5325881965183674,
+      "probability_up": 0.46741180348166145,
+      "confidence": 0.5325881965183386,
       "selected_threshold": null,
       "expected_hit_rate": null,
       "coverage": null,
@@ -115,8 +115,8 @@
     "oos_rows": 3785,
     "tlt": {
       "hit_rate": 0.5276089828269485,
-      "brier_score": 0.24940784104652497,
-      "log_loss": 0.6919691694474287,
+      "brier_score": 0.24940784104652994,
+      "log_loss": 0.6919691694474388,
       "confidence_buckets": {
         "ge_0.55": {
           "coverage": 0.5159841479524439,
@@ -157,8 +157,8 @@
     },
     "vix": {
       "hit_rate": 0.5519154557463672,
-      "brier_score": 0.24652733321620188,
-      "log_loss": 0.6861465391701111,
+      "brier_score": 0.2465273332161953,
+      "log_loss": 0.6861465391700979,
       "confidence_buckets": {
         "ge_0.55": {
           "coverage": 0.34187582562747687,
@@ -235,7 +235,7 @@
       }
     ]
   },
-  "generated_at_utc": "2026-02-15T01:43:46Z",
+  "generated_at_utc": "2026-02-15T01:44:56Z",
   "last_data_update": "2026-02-13 00:00:00",
   "charts": {
     "tlt_chart": "/Users/rajeshpatel/dev/stocks/tlt_vix_web/reports/charts/tlt_regime_chart.png",
