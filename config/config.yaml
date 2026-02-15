@@ -81,6 +81,7 @@ features:
     - global_yield_change_mean
     - inflation_expectations
     - credit_spread
+    - real_yield_10y
 
 model:
   n_regimes: 3

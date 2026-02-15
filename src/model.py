@@ -127,6 +127,11 @@ def _build_regime_labels(
         if "tlt_spy_corr_60d" in train_frame.columns
         else np.full(train_frame.shape[0], np.nan, dtype=float)
     )
+    real_yield_values = (
+        train_frame["real_yield_10y"].values
+        if "real_yield_10y" in train_frame.columns
+        else np.full(train_frame.shape[0], np.nan, dtype=float)
+    )
 
     for idx, col in enumerate(train_posterior.columns):
         weights = train_posterior[col].values
@@ -147,6 +152,7 @@ def _build_regime_labels(
         avg_fear_greed = _weighted_mean(weights, fear_greed_values)
         avg_dxy_return = _weighted_mean(weights, dxy_return_values)
         avg_corr = _weighted_mean(weights, corr_values)
+        avg_real_yield = _weighted_mean(weights, real_yield_values)
         profiles.append(
             {
                 "key": col,
@@ -168,6 +174,7 @@ def _build_regime_labels(
                 "avg_synthetic_fear_greed": avg_fear_greed,
                 "avg_dxy_return": avg_dxy_return,
                 "avg_tlt_spy_corr_60d": avg_corr,
+                "avg_real_yield_10y": avg_real_yield,
             }
         )
 
@@ -222,6 +229,7 @@ def _build_regime_labels(
         fear_greed = p["avg_synthetic_fear_greed"]
         dxy_ret = p["avg_dxy_return"]
         corr = p["avg_tlt_spy_corr_60d"]
+        real_yield = p["avg_real_yield_10y"]
 
         tlt_trend_txt = (
             f"{tlt_gap * 100:.2f}% above 20d trend" if np.isfinite(tlt_gap) else "trend unavailable"
@@ -245,6 +253,7 @@ def _build_regime_labels(
         fear_greed_txt = f"{fear_greed:.0f}" if np.isfinite(fear_greed) else "unavailable"
         dxy_txt = f"{dxy_ret * 100:+.2f}%" if np.isfinite(dxy_ret) else "unavailable"
         corr_txt = f"{corr:.2f}" if np.isfinite(corr) else "unavailable"
+        real_yield_txt = f"{real_yield:.2f}%" if np.isfinite(real_yield) else "unavailable"
         
         # Determine if volatility is accelerating or decelerating
         vol_trend_txt = "stable"
@@ -305,8 +314,8 @@ def _build_regime_labels(
             f"Volatility regime: {volume_level.lower()}, {vol_trend_txt}",
             f"Sentiment: {sentiment_signal} ({fear_greed_txt})",
             (
-                f"Macro context: Inflation Exp {inflation_txt}, Credit Spread {credit_txt}"
-                if np.isfinite(inflation) or np.isfinite(credit)
+                f"Macro context: Real Yield {real_yield_txt}, Inflation Exp {inflation_txt}, Credit Spread {credit_txt}"
+                if np.isfinite(real_yield) or np.isfinite(inflation) or np.isfinite(credit)
                 else "Macro context: unavailable"
             ),
             f"Correlations: Stock/Bond {corr_txt}, Dollar {dxy_txt}"
@@ -323,7 +332,7 @@ def _build_regime_labels(
             f"TLT technical position: {tlt_trend_txt}, {tlt_channel_txt}",
             f"VIX technical position: {vix_trend_txt}, {vix_channel_txt}",
             f"RSI(14): TLT {tlt_rsi_txt}, VIX {vix_rsi_txt}",
-            f"Macro: Inflation Exp {inflation_txt}, Credit Spread {credit_txt}",
+            f"Macro: Real Yield {real_yield_txt}, Inflation Exp {inflation_txt}, Credit Spread {credit_txt}",
             f"Sentiment: {sentiment_signal} ({fear_greed_txt}), Stock/Bond Corr: {corr_txt}",
             us10y_txt,
         ]

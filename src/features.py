@@ -109,6 +109,11 @@ def build_feature_dataset(raw_df: pd.DataFrame, cfg: dict[str, Any]) -> pd.DataF
     # FRED DGS10 is in percentage points; differencing captures daily rate change.
     df["us10y_change"] = df["DGS10"].diff()
     df["inflation_expectations"] = df.get("T10YIE", np.nan).ffill()
+    # Real Yield = Nominal 10Y (DGS10) - Inflation Expectations (T10YIE)
+    # Both are in percent, so simple subtraction works.
+    df["real_yield_10y"] = df["DGS10"] - df["inflation_expectations"]
+    df["real_yield_10y"] = df["real_yield_10y"].ffill()
+    
     df["credit_spread"] = df.get("BAMLH0A0HYM2", np.nan).ffill()
 
     if "T10Y2Y" in df.columns:
