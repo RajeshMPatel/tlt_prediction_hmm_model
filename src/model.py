@@ -538,7 +538,15 @@ def _pick_signal_from_policy(
     recent_buckets: dict[str, Any],
     decision_cfg: dict[str, Any],
 ) -> dict[str, Any]:
-    """Map probability + backtest bucket quality into actionable signal."""
+    """Map probability + backtest bucket quality into actionable signal.
+    
+    NOTE (User Request):
+    - STRONG/MODERATE: "Green Light" (High probability + High historical win rate).
+    - SKIP: "Red Light" (No Entry).
+      - Means the probability is too close to 50/50 (<55%).
+      - OR the signal has lost money in recent backtests.
+      - It does NOT mean "Hold" existing trades; it means "Do not initiate new risk".
+    """
     neutral_band = float(decision_cfg.get("neutral_band", 0.02))
     min_bucket_rows = int(decision_cfg.get("min_bucket_rows", 120))
     strong_cfg = decision_cfg.get("strong", {})
@@ -826,11 +834,21 @@ def run_hmm_direction_model(feature_df: pd.DataFrame, cfg: dict[str, Any]) -> HM
         raise RuntimeError("Not enough non-null rows for live scoring.")
 
     # Ensemble Loop
+    # -------------------------------------------------------------------------
+    # The user requested an "Ensemble HMM" to reduce the "coin flip" instability of single runs.
+    # Instead of trusting one random initialization, we train 10 identical models with
+    # different random seeds.
+    #
+    # Why?
+    # 1. HMMs can get stuck in "local optima" (different valid interpretations of the same data).
+    # 2. Averaging 10 models cancels out the noise and gives a robust "Consensus" probability.
+    # 3. This makes the "Confidence" score much more honest and stable day-to-day.
     ensemble_probs: list[pd.DataFrame] = []
     base_seed = int(model_cfg.get("random_state", 42))
     representative_model = {}
     
     for i in range(ensemble_size):
+        # Each model gets a unique seed (42, 43, 44...) to force a slightly different starting point.
         seed = base_seed + i
         scaler, hmm, train_posterior = _fit_scaler_hmm_and_posterior(
             frame=train_frame,
@@ -870,6 +888,7 @@ def run_hmm_direction_model(feature_df: pd.DataFrame, cfg: dict[str, Any]) -> HM
             }
 
     # Average the probabilities across the ensemble
+    # This is the "Consensus Vote" - the final output is the mean of all 10 models.
     avg_probs = pd.concat(ensemble_probs).groupby(level=0).mean()
     
     # Use the representative model for regime labels and structure

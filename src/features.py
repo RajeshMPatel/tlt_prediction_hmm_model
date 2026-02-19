@@ -58,6 +58,9 @@ def build_feature_dataset(raw_df: pd.DataFrame, cfg: dict[str, Any]) -> pd.DataF
     df["tlt_spy_corr_60d"] = df["tlt_return"].rolling(60).corr(spy_ret)
 
     # Synthetic Fear & Greed Index (0-100)
+    # -------------------------------------------------------------------------
+    # User requested a "Sentiment" indicator similar to CNN Fear & Greed.
+    # Since we cannot scrape CNN daily, we build a synthetic version using:
     # 1. VIX Component (Inverted: Low VIX = Greed/High Score)
     # 2. SPY Momentum (Price vs 125d MA)
     # 3. Credit Spread (Inverted: Low Spread = Greed/High Score)
@@ -111,6 +114,13 @@ def build_feature_dataset(raw_df: pd.DataFrame, cfg: dict[str, Any]) -> pd.DataF
     df["inflation_expectations"] = df.get("T10YIE", np.nan).ffill()
     # Real Yield = Nominal 10Y (DGS10) - Inflation Expectations (T10YIE)
     # Both are in percent, so simple subtraction works.
+    #
+    # NOTE (User Request):
+    # The user asked about "Truflation" (real-time spot inflation).
+    # We use T10YIE (Breakeven Inflation) instead because:
+    # 1. History: We need 15+ years of data for the HMM (Truflation has ~1 year free).
+    # 2. Relevance: TLT is a long-duration asset driven by *future* inflation expectations (10Y),
+    #    not current spot prices. T10YIE captures the market's 10-year outlook.
     df["real_yield_10y"] = df["DGS10"] - df["inflation_expectations"]
     df["real_yield_10y"] = df["real_yield_10y"].ffill()
     

@@ -60,11 +60,15 @@ features:
   feature_columns:
     - tlt_return
     - vix_return
+    # Multi-timeframe Volatility (User Request):
+    # To detect regime changes faster (e.g. 5d vol spiking > 60d vol).
     - realized_vol_5d
     - realized_vol_20d
     - realized_vol_60d
     - tlt_rsi_14
     - vix_rsi_14
+    # Sentiment & Macro (User Request):
+    # "Expert Opinion" features to give the model economic context.
     - synthetic_fear_greed
     - dxy_return
     - tlt_spy_corr_60d
@@ -81,10 +85,15 @@ features:
     - global_yield_change_mean
     - inflation_expectations
     - credit_spread
+    # Real Yield (User Request):
+    # Nominal 10Y - Inflation Expectations. The #1 driver of TLT prices.
+    # Added to capture the "true" cost of money.
     - real_yield_10y
 
 model:
   n_regimes: 3
+  # Ensemble Size: Number of HMM models to train and average.
+  # User requested this to stabilize predictions (reduce "coin flip" variance).
   ensemble_size: 10
   covariance_type: full
   n_iter: 500
