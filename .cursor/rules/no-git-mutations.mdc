@@ -28,7 +28,7 @@ You may only run safe, read-only Git commands to gather context, such as:
 - `git show`
 
 ## Required Behavior
-When the user asks to perform a Git operation (e.g., "remove data and reports from my git", "commit my changes", "add this to github"):
-1. **DO NOT** execute it for them.
-2. **DO** provide the exact terminal commands inside a Markdown code block (` ```bash `) so the user can review them and run them manually.
-3. Explain briefly what the commands will do.
+When working with Git or when the user asks to perform a Git operation:
+1. **DO NOT** execute mutating Git commands using the Shell tool.
+2. **DO NOT** provide the Git commands (like `git add`, `git commit`, `git push`) to the user in your response unless they explicitly ask for them. The user already knows how to use Git and finds redundant command suggestions annoying.
+3. Simply confirm that the files are ready for them to review and commit.

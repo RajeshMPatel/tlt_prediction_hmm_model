@@ -4,284 +4,424 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TLT / VIX H5 Today Card</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    body { font-family: Arial, sans-serif; margin: 24px; background: #f6f8fb; color: #1f2937; }
-    .card { background: #fff; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,.08); padding: 20px; max-width: 980px; }
-    h1 { margin-top: 0; }
-    .grid { display: grid; grid-template-columns: repeat(2, minmax(220px, 1fr)); gap: 12px; }
-    .tile { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 12px; }
-    .k { font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: .04em; margin-bottom: 6px; }
-    .v { font-size: 24px; font-weight: 700; }
-    .muted { color: #6b7280; }
-    .signal-grid { display: grid; grid-template-columns: repeat(2, minmax(220px, 1fr)); gap: 12px; margin: 12px 0 8px; }
-    .signal { border-radius: 10px; border: 1px solid #e5e7eb; padding: 12px; background: #f9fafb; }
-    .signal-action { font-size: 22px; font-weight: 800; margin: 6px 0; }
-    .signal-meta { font-size: 13px; color: #4b5563; margin-top: 6px; line-height: 1.4; }
-    .strong { color: #0f766e; }
-    .moderate { color: #1d4ed8; }
-    .skip { color: #b45309; }
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }
-    th, td { border: 1px solid #e5e7eb; padding: 8px; vertical-align: top; text-align: left; }
-    th { background: #f3f4f6; font-weight: 700; }
-    .tight-list { margin: 0; padding-left: 18px; }
-    .tight-list li { margin: 2px 0; }
-    .pill { display: inline-block; border-radius: 999px; padding: 2px 8px; font-size: 12px; font-weight: 700; margin-right: 6px; }
-    .pill-bull { background: #dcfce7; color: #166534; }
-    .pill-bear { background: #fee2e2; color: #991b1b; }
-    .pill-neutral { background: #e5e7eb; color: #374151; }
-    .howto { margin-top: 8px; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 10px 12px; font-size: 13px; color: #374151; }
-    .current-row { background: #fff7ed; }
-    .current-row td { border-color: #fdba74; }
-    .bridge { margin: 12px 0 14px; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 10px; padding: 12px; font-size: 13px; color: #1e3a8a; }
-    .bridge h4 { margin: 0 0 8px; color: #1e40af; }
-    ul { margin-top: 8px; }
-    .explainer { margin-top: 24px; border-top: 1px solid #e5e7eb; padding-top: 20px; color: #4b5563; }
-    .explainer h3 { color: #1f2937; margin-bottom: 12px; }
-    .explainer p { margin: 8px 0; line-height: 1.5; }
-    .explainer ul { margin: 8px 0; padding-left: 20px; }
-    .explainer li { margin-bottom: 6px; }
-    .explainer strong { color: #374151; }
-    .sentiment-bar { height: 8px; background: #e5e7eb; border-radius: 4px; overflow: hidden; margin-top: 6px; }
-    .sentiment-fill { height: 100%; background: #6b7280; }
-    .sentiment-fill.fear { background: #ef4444; }
-    .sentiment-fill.greed { background: #22c55e; }
-    .sentiment-fill.neutral { background: #eab308; }
+    body { font-family: 'Inter', sans-serif; }
+    .glass-card {
+      background: rgba(30, 41, 59, 0.6);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(51, 65, 85, 0.6);
+    }
+    .gradient-text {
+      background: linear-gradient(135deg, #f8fafc 0%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
   </style>
 </head>
-<body>
-  <div class="card">
-    <h1>TLT / VIX H5 Probabilities</h1>
+<body class="bg-[#0b1120] text-slate-300 antialiased min-h-screen flex flex-col">
+  
+  <!-- Navbar -->
+  <header class="bg-[#0f172a]/90 backdrop-blur-md border-b border-slate-800 sticky top-0 z-50 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <svg class="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+        <h1 class="text-xl font-bold tracking-tight text-white">Quant <span class="text-blue-500">HMM</span></h1>
+      </div>
+      <nav>
+        <a href="/status" class="text-sm font-medium text-slate-400 hover:text-white transition-colors bg-slate-800/80 hover:bg-slate-700 px-3 py-2 rounded-md border border-slate-700">System Status</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+    
+    <div class="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
+      <div>
+        <h2 class="text-3xl font-extrabold gradient-text tracking-tight mb-2">TLT / VIX H5 Probabilities</h2>
+        <p class="text-slate-400 font-medium">Forecast for the next 5 trading days (H5)</p>
+      </div>
+      {% if has_data %}
+      <div class="inline-flex items-center bg-slate-800/50 border border-slate-700 shadow-sm rounded-lg px-4 py-2">
+        <span class="flex h-3 w-3 relative mr-3">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+        </span>
+        <span class="text-sm font-semibold text-slate-400">Date: <span class="text-white">{{ payload.date }}</span></span>
+      </div>
+      {% endif %}
+    </div>
+
     {% if has_data %}
-      <p class="muted">Date: <strong>{{ payload.date }}</strong> (H5 = Forecast for next 5 trading days)</p>
-      <div class="grid">
-        <div class="tile"><div class="k">P(TLT up H5)</div><div class="v">{{ "%.2f%%"|format(payload.probabilities.tlt_up_h5 * 100) }}</div></div>
-        <div class="tile"><div class="k">P(TLT down H5)</div><div class="v">{{ "%.2f%%"|format(payload.probabilities.tlt_down_h5 * 100) }}</div></div>
-        <div class="tile"><div class="k">P(VIX up H5)</div><div class="v">{{ "%.2f%%"|format(payload.probabilities.vix_up_h5 * 100) }}</div></div>
-        <div class="tile"><div class="k">P(VIX down H5)</div><div class="v">{{ "%.2f%%"|format(payload.probabilities.vix_down_h5 * 100) }}</div></div>
+      
+      <!-- Top 4 Probability Tiles -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div class="glass-card rounded-2xl p-6 shadow-sm flex flex-col justify-center">
+          <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">P(TLT up H5)</div>
+          <div class="text-4xl font-extrabold text-white">{{ "%.2f%%"|format(payload.probabilities.tlt_up_h5 * 100) }}</div>
+        </div>
+        <div class="glass-card rounded-2xl p-6 shadow-sm flex flex-col justify-center">
+          <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">P(TLT down H5)</div>
+          <div class="text-4xl font-extrabold text-white">{{ "%.2f%%"|format(payload.probabilities.tlt_down_h5 * 100) }}</div>
+        </div>
+        <div class="glass-card rounded-2xl p-6 shadow-sm flex flex-col justify-center">
+          <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">P(VIX up H5)</div>
+          <div class="text-4xl font-extrabold text-white">{{ "%.2f%%"|format(payload.probabilities.vix_up_h5 * 100) }}</div>
+        </div>
+        <div class="glass-card rounded-2xl p-6 shadow-sm flex flex-col justify-center">
+          <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">P(VIX down H5)</div>
+          <div class="text-4xl font-extrabold text-white">{{ "%.2f%%"|format(payload.probabilities.vix_down_h5 * 100) }}</div>
+        </div>
       </div>
       
+      <!-- Fear and Greed Index -->
       {% if payload.market_context.synthetic_fear_greed is not none %}
       {% set sentiment = payload.market_context.synthetic_fear_greed %}
-      {% set sentiment_cls = 'neutral' %}
-      {% if sentiment <= 45 %}{% set sentiment_cls = 'fear' %}{% endif %}
-      {% if sentiment >= 55 %}{% set sentiment_cls = 'greed' %}{% endif %}
-      <div class="grid" style="margin-top: 12px; grid-template-columns: 1fr;">
-        <div class="tile">
-          <div class="k">Synthetic Fear & Greed Index</div>
-          <div class="v" style="font-size: 20px;">
-            {{ "%.0f"|format(sentiment) }} 
-            <span style="font-size: 14px; color: #6b7280; font-weight: 400;">
-              {% if sentiment <= 25 %}(Extreme Fear){% elif sentiment <= 45 %}(Fear){% elif sentiment >= 75 %}(Extreme Greed){% elif sentiment >= 55 %}(Greed){% else %}(Neutral){% endif %}
-            </span>
+      {% set sentiment_cls = 'bg-yellow-500' %}
+      {% set sentiment_text = 'text-yellow-500' %}
+      {% set sentiment_label = 'Neutral' %}
+      {% if sentiment <= 25 %}{% set sentiment_cls = 'bg-red-500' %}{% set sentiment_text = 'text-red-500' %}{% set sentiment_label = 'Extreme Fear' %}{% elif sentiment <= 45 %}{% set sentiment_cls = 'bg-red-400' %}{% set sentiment_text = 'text-red-400' %}{% set sentiment_label = 'Fear' %}{% elif sentiment >= 75 %}{% set sentiment_cls = 'bg-emerald-500' %}{% set sentiment_text = 'text-emerald-500' %}{% set sentiment_label = 'Extreme Greed' %}{% elif sentiment >= 55 %}{% set sentiment_cls = 'bg-emerald-400' %}{% set sentiment_text = 'text-emerald-400' %}{% set sentiment_label = 'Greed' %}{% endif %}
+      
+      <div class="glass-card rounded-2xl p-6 shadow-sm mb-8">
+        <div class="flex items-center justify-between mb-4">
+          <div class="text-sm font-bold text-slate-400 uppercase tracking-wider">Synthetic Fear & Greed Index</div>
+          <div class="text-2xl font-extrabold {{ sentiment_text }}">
+            {{ "%.0f"|format(sentiment) }} <span class="text-sm font-semibold opacity-80 uppercase ml-1">({{ sentiment_label }})</span>
           </div>
-          <div class="sentiment-bar">
-            <div class="sentiment-fill {{ sentiment_cls }}" style="width: {{ sentiment }}%;"></div>
-          </div>
+        </div>
+        <div class="w-full bg-slate-800 rounded-full h-3 mb-2 overflow-hidden shadow-inner border border-slate-700">
+          <div class="{{ sentiment_cls }} h-3 rounded-full transition-all duration-1000 ease-out shadow-[0_0_10px_rgba(0,0,0,0.5)]" style="width: {{ sentiment }}%"></div>
+        </div>
+        <div class="flex justify-between text-xs font-semibold text-slate-500 uppercase">
+          <span>0 (Fear)</span>
+          <span>50 (Neutral)</span>
+          <span>100 (Greed)</span>
         </div>
       </div>
       {% endif %}
 
+      <!-- Action Signals -->
       {% if payload.actionable_signals and payload.actionable_signals.policy_enabled %}
-      <h3>Today Action Signals</h3>
-      <div class="signal-grid">
-        {% set tlt_signal = payload.actionable_signals.tlt %}
-        {% set tlt_class = 'skip' %}
-        {% if tlt_signal.action.startswith('STRONG') %}{% set tlt_class = 'strong' %}{% endif %}
-        {% if tlt_signal.action.startswith('MODERATE') %}{% set tlt_class = 'moderate' %}{% endif %}
-        <div class="signal">
-          <div class="k">TLT Signal</div>
-          <div class="signal-action {{ tlt_class }}">{{ tlt_signal.action }}</div>
-          <div class="signal-meta">
-            Confidence: {{ "%.2f%%"|format(tlt_signal.confidence * 100) if tlt_signal.confidence is not none else "N/A" }}<br/>
-            {% if tlt_signal.expected_hit_rate is not none %}
-            Recent hit rate at this confidence: {{ "%.2f%%"|format(tlt_signal.expected_hit_rate * 100) }}<br/>
-            Coverage: {{ "%.2f%%"|format(tlt_signal.coverage * 100) }}
-            {% else %}
-            Reason: 
-            {% if tlt_signal.reason == "no_valid_confidence_bucket" %}
-              Either the signal is too weak (<55%), or when we tried this signal in the past year, it lost money.
-            {% elif tlt_signal.reason == "probability_too_close_to_50_50" %}
-              Probability is a coin flip (near 50/50).
-            {% elif tlt_signal.reason == "backtest_unavailable" %}
-              Backtest data unavailable.
-            {% else %}
-              {{ tlt_signal.reason }}
-            {% endif %}
-            {% endif %}
-          </div>
+      <div class="mb-10">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-xl font-bold text-white">Today's Action Signals</h3>
+          <span class="text-xs font-medium bg-slate-800 border border-slate-700 text-slate-400 px-3 py-1 rounded-full">Calibrated against historical backtest</span>
         </div>
-
-        {% set vix_signal = payload.actionable_signals.vix %}
-        {% set vix_class = 'skip' %}
-        {% if vix_signal.action.startswith('STRONG') %}{% set vix_class = 'strong' %}{% endif %}
-        {% if vix_signal.action.startswith('MODERATE') %}{% set vix_class = 'moderate' %}{% endif %}
-        <div class="signal">
-          <div class="k">VIX Signal</div>
-          <div class="signal-action {{ vix_class }}">{{ vix_signal.action }}</div>
-          <div class="signal-meta">
-            Confidence: {{ "%.2f%%"|format(vix_signal.confidence * 100) if vix_signal.confidence is not none else "N/A" }}<br/>
-            {% if vix_signal.expected_hit_rate is not none %}
-            Recent hit rate at this confidence: {{ "%.2f%%"|format(vix_signal.expected_hit_rate * 100) }}<br/>
-            Coverage: {{ "%.2f%%"|format(vix_signal.coverage * 100) }}
-            {% else %}
-            Reason: 
-            {% if vix_signal.reason == "no_valid_confidence_bucket" %}
-              Either the signal is too weak (<55%), or when we tried this signal in the past year, it lost money.
-            {% elif vix_signal.reason == "probability_too_close_to_50_50" %}
-              Probability is a coin flip (near 50/50).
-            {% elif vix_signal.reason == "backtest_unavailable" %}
-              Backtest data unavailable.
-            {% else %}
-              {{ vix_signal.reason }}
-            {% endif %}
-            {% endif %}
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          
+          <!-- TLT Signal -->
+          {% set tlt_signal = payload.actionable_signals.tlt %}
+          {% set tlt_bg = 'bg-slate-800/40 border-slate-700' %}
+          {% set tlt_text = 'text-slate-400' %}
+          
+          {% if tlt_signal.action.startswith('STRONG') %}
+            {% set tlt_bg = 'bg-emerald-900/20 border-emerald-800/50' %}
+            {% set tlt_text = 'text-emerald-400' %}
+          {% elif tlt_signal.action.startswith('MODERATE') %}
+            {% set tlt_bg = 'bg-blue-900/20 border-blue-800/50' %}
+            {% set tlt_text = 'text-blue-400' %}
+          {% elif tlt_signal.action == 'SKIP' %}
+            {% set tlt_bg = 'bg-orange-900/20 border-orange-800/50' %}
+            {% set tlt_text = 'text-orange-400' %}
+          {% endif %}
+          
+          <div class="rounded-2xl border p-6 shadow-sm {{ tlt_bg }}">
+            <div class="flex items-start justify-between mb-4">
+              <div>
+                <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">TLT Signal</div>
+                <div class="text-3xl font-black {{ tlt_text }} drop-shadow-sm">{{ tlt_signal.action }}</div>
+              </div>
+              <div class="text-right">
+                <div class="text-xs font-semibold text-slate-400 uppercase mb-1">Confidence</div>
+                <div class="text-xl font-bold text-white">{{ "%.2f%%"|format(tlt_signal.confidence * 100) if tlt_signal.confidence is not none else "N/A" }}</div>
+              </div>
+            </div>
+            
+            <div class="bg-[#0b1120]/50 border border-slate-800/50 rounded-xl p-4 text-sm font-medium text-slate-300">
+              {% if tlt_signal.expected_hit_rate is not none %}
+              <div class="flex justify-between mb-2">
+                <span class="text-slate-400">Historical Hit Rate</span>
+                <span class="font-bold text-white">{{ "%.2f%%"|format(tlt_signal.expected_hit_rate * 100) }}</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-slate-400">Setup Frequency (Coverage)</span>
+                <span class="font-bold text-white">{{ "%.2f%%"|format(tlt_signal.coverage * 100) }}</span>
+              </div>
+              {% else %}
+              <div class="flex items-start gap-2">
+                <svg class="w-5 h-5 text-orange-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                <span>
+                  {% if tlt_signal.reason == "no_valid_confidence_bucket" %}
+                    Signal too weak (<55%) or unprofitable in recent backtests.
+                  {% elif tlt_signal.reason == "probability_too_close_to_50_50" %}
+                    Probability is a coin flip (near 50/50).
+                  {% elif tlt_signal.reason == "backtest_unavailable" %}
+                    Backtest data unavailable.
+                  {% else %}
+                    {{ tlt_signal.reason }}
+                  {% endif %}
+                </span>
+              </div>
+              {% endif %}
+            </div>
           </div>
+
+          <!-- VIX Signal -->
+          {% set vix_signal = payload.actionable_signals.vix %}
+          {% set vix_bg = 'bg-slate-800/40 border-slate-700' %}
+          {% set vix_text = 'text-slate-400' %}
+          
+          {% if vix_signal.action.startswith('STRONG') %}
+            {% set vix_bg = 'bg-emerald-900/20 border-emerald-800/50' %}
+            {% set vix_text = 'text-emerald-400' %}
+          {% elif vix_signal.action.startswith('MODERATE') %}
+            {% set vix_bg = 'bg-blue-900/20 border-blue-800/50' %}
+            {% set vix_text = 'text-blue-400' %}
+          {% elif vix_signal.action == 'SKIP' %}
+            {% set vix_bg = 'bg-orange-900/20 border-orange-800/50' %}
+            {% set vix_text = 'text-orange-400' %}
+          {% endif %}
+          
+          <div class="rounded-2xl border p-6 shadow-sm {{ vix_bg }}">
+            <div class="flex items-start justify-between mb-4">
+              <div>
+                <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">VIX Signal</div>
+                <div class="text-3xl font-black {{ vix_text }} drop-shadow-sm">{{ vix_signal.action }}</div>
+              </div>
+              <div class="text-right">
+                <div class="text-xs font-semibold text-slate-400 uppercase mb-1">Confidence</div>
+                <div class="text-xl font-bold text-white">{{ "%.2f%%"|format(vix_signal.confidence * 100) if vix_signal.confidence is not none else "N/A" }}</div>
+              </div>
+            </div>
+            
+            <div class="bg-[#0b1120]/50 border border-slate-800/50 rounded-xl p-4 text-sm font-medium text-slate-300">
+              {% if vix_signal.expected_hit_rate is not none %}
+              <div class="flex justify-between mb-2">
+                <span class="text-slate-400">Historical Hit Rate</span>
+                <span class="font-bold text-white">{{ "%.2f%%"|format(vix_signal.expected_hit_rate * 100) }}</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-slate-400">Setup Frequency (Coverage)</span>
+                <span class="font-bold text-white">{{ "%.2f%%"|format(vix_signal.coverage * 100) }}</span>
+              </div>
+              {% else %}
+              <div class="flex items-start gap-2">
+                <svg class="w-5 h-5 text-orange-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                <span>
+                  {% if vix_signal.reason == "no_valid_confidence_bucket" %}
+                    Signal too weak (<55%) or unprofitable in recent backtests.
+                  {% elif vix_signal.reason == "probability_too_close_to_50_50" %}
+                    Probability is a coin flip (near 50/50).
+                  {% elif vix_signal.reason == "backtest_unavailable" %}
+                    Backtest data unavailable.
+                  {% else %}
+                    {{ vix_signal.reason }}
+                  {% endif %}
+                </span>
+              </div>
+              {% endif %}
+            </div>
+          </div>
+
+        </div>
+        <div class="mt-3 text-sm text-slate-400 flex flex-wrap items-center justify-center gap-4">
+          <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> STRONG = Highest edge</span>
+          <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span> MODERATE = Usable edge</span>
+          <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-orange-500"></span> SKIP = No edge / Do not trade</span>
         </div>
       </div>
-      <p class="muted">Interpretation: STRONG = highest-confidence setup, MODERATE = usable edge, SKIP = no reliable edge today.</p>
       {% endif %}
 
-      <h3>Current Regime</h3>
-      <div class="howto">
-        <strong>How to read:</strong> Start with <em>Status</em> and <em>Description</em>. Then use <em>What this suggests</em> for plain-English direction and <em>Evidence</em> for underlying metrics.
-      </div>
-      <div class="bridge">
-        <h4>How current regime translates to actionable signals</h4>
-        <ul class="tight-list">
-          <li>
-            Current regime context: <strong>{{ payload.most_likely_regime }}</strong>
-            {% set cur_prob = payload.regime_probabilities[payload.most_likely_regime] if payload.regime_probabilities and payload.most_likely_regime in payload.regime_probabilities else none %}
-            {% if cur_prob is not none %}
-            ({{ "%.2f%%"|format(cur_prob * 100) }} probability)
-            {% endif %}.
-            This describes the market state, not a direct trade.
-          </li>
-          {% if payload.actionable_signals and payload.actionable_signals.tlt %}
-          {% set s = payload.actionable_signals.tlt %}
-          <li>
-            <strong>TLT action:</strong> {{ s.action }}.
-            Regime context is combined with current probability ({{ "%.2f%%"|format(s.confidence * 100) if s.confidence is not none else "N/A" }} confidence)
-            {% if s.expected_hit_rate is not none %}
-            and recent out-of-sample hit rate ({{ "%.2f%%"|format(s.expected_hit_rate * 100) }}) at this confidence level.
-            {% else %}
-            and confidence-bucket checks; result is {{ s.reason }}.
-            {% endif %}
-          </li>
-          {% endif %}
-          {% if payload.actionable_signals and payload.actionable_signals.vix %}
-          {% set s = payload.actionable_signals.vix %}
-          <li>
-            <strong>VIX action:</strong> {{ s.action }}.
-            Regime context is combined with current probability ({{ "%.2f%%"|format(s.confidence * 100) if s.confidence is not none else "N/A" }} confidence)
-            {% if s.expected_hit_rate is not none %}
-            and recent out-of-sample hit rate ({{ "%.2f%%"|format(s.expected_hit_rate * 100) }}) at this confidence level.
-            {% else %}
-            and confidence-bucket checks; result is {{ s.reason }}.
-            {% endif %}
-          </li>
-          {% endif %}
-        </ul>
-      </div>
-      <table>
-        <thead>
-          <tr>
-            <th>Regime Name</th>
-            <th>Probability</th>
-            <th>Volatility (20d)</th>
-            <th>Status</th>
-            <th>Description</th>
-            <th>What this suggests</th>
-            <th>Evidence</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for regime_name, regime_prob in payload.regime_probabilities.items() %}
-          {% set regime_def = payload.regime_definitions[regime_name] if payload.regime_definitions and regime_name in payload.regime_definitions else {} %}
-          <tr class="{% if regime_name == payload.most_likely_regime %}current-row{% endif %}">
-            <td>{{ regime_name }}</td>
-            <td>{{ "%.2f%%"|format(regime_prob * 100) }}</td>
-            <td>
-              {% if regime_def and regime_def.avg_realized_vol_20d is not none %}
-              {{ "%.2f%%"|format(regime_def.avg_realized_vol_20d * 100) }}
-              {% else %}
-              N/A
-              {% endif %}
-            </td>
-            <td>{{ regime_def.status if regime_def and regime_def.status else "N/A" }}</td>
-            <td>{{ regime_def.interpretation if regime_def and regime_def.interpretation else "N/A" }}</td>
-            <td>
-              {% if regime_def and regime_def.technical_takeaways %}
-              <ul class="tight-list">
-                {% for item in regime_def.technical_takeaways %}
-                {% set low = item|lower %}
-                <li>
-                  {% if "bullish" in low %}
-                  <span class="pill pill-bull">Bullish</span>
-                  {% elif "bearish" in low %}
-                  <span class="pill pill-bear">Bearish</span>
-                  {% else %}
-                  <span class="pill pill-neutral">Neutral</span>
-                  {% endif %}
-                  {{ item }}
-                </li>
-                {% endfor %}
-              </ul>
-              {% else %}
-              N/A
-              {% endif %}
-            </td>
-            <td>
-              {% if regime_def and regime_def.technical_reason_bullets %}
-              <ul class="tight-list">
-                {% for item in regime_def.technical_reason_bullets %}
-                <li>{{ item }}</li>
-                {% endfor %}
-              </ul>
-              {% else %}
-              {{ regime_def.technical_reason if regime_def and regime_def.technical_reason else "N/A" }}
-              {% endif %}
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-
-      <p class="muted">Most likely regime: <strong>{{ payload.most_likely_regime }}</strong></p>
-      <p class="muted">Last data update: <strong>{{ payload.last_data_update }}</strong></p>
-      <p class="muted">Generated at (UTC): <strong>{{ payload.generated_at_utc }}</strong></p>
-      <p><a href="/status">View status/debug page</a></p>
-
-      <div class="explainer">
-        <h3>How the Model Works</h3>
-        <p>Think of the HMM model like a <strong>Doctor diagnosing a patient</strong>.</p>
+      <!-- Regime Analysis Section -->
+      <div class="mb-10">
+        <h3 class="text-xl font-bold text-white mb-4">Market Regime Analysis</h3>
         
-        <p><strong>1. The Symptoms (Technical Indicators)</strong><br>
-        The "Technical Indicators" you see (RSI, Volatility, Trend Gap, Credit Spreads, <strong>Sentiment</strong>, <strong>Dollar</strong>) are the symptoms. The model looks at all of them at once as a single "health profile" for the day.</p>
-        
-        <p><strong>2. The Diagnosis (Deciding the Regime)</strong><br>
-        The "Regime" is the medical condition. The model has studied 15+ years of history and learned that the market usually exists in one of 3 states (clusters):</p>
-        <ul>
-          <li><strong>Regime 1 (e.g., Healthy/Calm):</strong> Historically defined by Low Volatility + Stable Trends + Normal Spreads.</li>
-          <li><strong>Regime 2 (e.g., Fever/Crash):</strong> Historically defined by High Volatility + Spiking Spreads + Oversold RSI.</li>
-          <li><strong>Regime 3 (e.g., Mixed/Choppy):</strong> Everything else.</li>
-        </ul>
-        <p>It compares today's "symptoms" against these definitions to decide the current regime (e.g., "Today matches Regime 1 with 98% certainty").</p>
+        <!-- Regime Translation Bridge -->
+        <div class="bg-indigo-900/20 border border-indigo-800/50 rounded-2xl p-6 mb-6 shadow-sm">
+          <h4 class="text-lg font-bold text-indigo-300 mb-3 flex items-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            How the current regime drives action
+          </h4>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="bg-slate-900/50 rounded-xl p-4 border border-indigo-800/30 shadow-inner">
+              <div class="text-xs font-bold text-indigo-400 uppercase mb-1">Context</div>
+              <div class="text-sm text-slate-300">
+                <strong class="text-white">{{ payload.most_likely_regime }}</strong>
+                {% set cur_prob = payload.regime_probabilities[payload.most_likely_regime] if payload.regime_probabilities and payload.most_likely_regime in payload.regime_probabilities else none %}
+                {% if cur_prob is not none %}
+                <span class="text-indigo-400 font-semibold ml-1">({{ "%.0f%%"|format(cur_prob * 100) }} prob)</span>
+                {% endif %}
+              </div>
+            </div>
+            
+            {% if payload.actionable_signals and payload.actionable_signals.tlt %}
+            {% set s = payload.actionable_signals.tlt %}
+            <div class="bg-slate-900/50 rounded-xl p-4 border border-indigo-800/30 shadow-inner">
+              <div class="text-xs font-bold text-indigo-400 uppercase mb-1">TLT Outcome</div>
+              <div class="text-sm text-slate-300">
+                <strong class="text-white">{{ s.action }}</strong> at {{ "%.0f%%"|format(s.confidence * 100) if s.confidence is not none else "N/A" }} conf.
+                {% if s.expected_hit_rate is not none %}
+                <span class="text-slate-400 block mt-1">Hit rate: {{ "%.0f%%"|format(s.expected_hit_rate * 100) }}</span>
+                {% endif %}
+              </div>
+            </div>
+            {% endif %}
+            
+            {% if payload.actionable_signals and payload.actionable_signals.vix %}
+            {% set s = payload.actionable_signals.vix %}
+            <div class="bg-slate-900/50 rounded-xl p-4 border border-indigo-800/30 shadow-inner">
+              <div class="text-xs font-bold text-indigo-400 uppercase mb-1">VIX Outcome</div>
+              <div class="text-sm text-slate-300">
+                <strong class="text-white">{{ s.action }}</strong> at {{ "%.0f%%"|format(s.confidence * 100) if s.confidence is not none else "N/A" }} conf.
+                {% if s.expected_hit_rate is not none %}
+                <span class="text-slate-400 block mt-1">Hit rate: {{ "%.0f%%"|format(s.expected_hit_rate * 100) }}</span>
+                {% endif %}
+              </div>
+            </div>
+            {% endif %}
+          </div>
+        </div>
 
-        <p><strong>3. The Prognosis ("H5" = Next 5 Days)</strong><br>
-        "H5" stands for the <strong>5-day forecast horizon</strong> (one trading week). The model predicts the probability of the price being higher or lower 5 days from now, rather than just tomorrow. This captures swing trends rather than daily noise.</p>
-
-        <p>The HMM predicts by <strong>historical precedent</strong> using an <strong>Ensemble Consensus</strong>. We train 10 slightly different versions of the model (like getting 10 second opinions). Once they diagnose the regime, they vote:</p>
-        <ul>
-          <li>Each model calculates the historical win rate for its diagnosed regime.</li>
-          <li>We average all 10 predictions to get the final probability. This reduces noise and makes the signal more stable.</li>
-        </ul>
-
-        <p><strong>Why is this better than just using RSI?</strong><br>
-        A simple RSI rule says: "If RSI > 70, Sell." The HMM says: "If RSI > 70 <strong>BUT</strong> Volatility is Low and Spreads are Tight (Regime 1), that's actually a <strong>strong uptrend</strong>, so Buy." It captures the <strong>context</strong> that a single indicator misses.</p>
+        <!-- Regime Table -->
+        <div class="bg-slate-800/50 rounded-2xl shadow-sm border border-slate-700 overflow-hidden backdrop-blur-sm">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm">
+              <thead class="bg-slate-800 text-slate-400 text-xs uppercase font-semibold border-b border-slate-700">
+                <tr>
+                  <th class="px-6 py-4">Regime</th>
+                  <th class="px-6 py-4">Prob</th>
+                  <th class="px-6 py-4">Vol (20d)</th>
+                  <th class="px-6 py-4">Status & Description</th>
+                  <th class="px-6 py-4 w-1/4">Technical Outlook</th>
+                  <th class="px-6 py-4 w-1/4">Underlying Evidence</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-700">
+                {% for regime_name, regime_prob in payload.regime_probabilities.items() %}
+                {% set regime_def = payload.regime_definitions[regime_name] if payload.regime_definitions and regime_name in payload.regime_definitions else {} %}
+                {% set is_current = (regime_name == payload.most_likely_regime) %}
+                
+                <tr class="hover:bg-slate-800 transition-colors {{ 'bg-indigo-900/20' if is_current else '' }}">
+                  <td class="px-6 py-4 align-top">
+                    <div class="font-bold text-white flex items-center gap-2">
+                      {{ regime_name }}
+                      {% if is_current %}
+                      <span class="flex h-2.5 w-2.5 relative" title="Current Regime">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-indigo-500"></span>
+                      </span>
+                      {% endif %}
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 align-top font-bold {{ 'text-indigo-400' if is_current else 'text-slate-300' }}">
+                    {{ "%.1f%%"|format(regime_prob * 100) }}
+                  </td>
+                  <td class="px-6 py-4 align-top text-slate-300 font-medium">
+                    {% if regime_def and regime_def.avg_realized_vol_20d is not none %}
+                    {{ "%.2f%%"|format(regime_def.avg_realized_vol_20d * 100) }}
+                    {% else %}
+                    N/A
+                    {% endif %}
+                  </td>
+                  <td class="px-6 py-4 align-top">
+                    <div class="font-bold text-slate-200 mb-1">{{ regime_def.status if regime_def and regime_def.status else "N/A" }}</div>
+                    <div class="text-slate-400 text-xs leading-relaxed">{{ regime_def.interpretation if regime_def and regime_def.interpretation else "N/A" }}</div>
+                  </td>
+                  <td class="px-6 py-4 align-top">
+                    {% if regime_def and regime_def.technical_takeaways %}
+                    <ul class="flex flex-col gap-2 text-xs">
+                      {% for item in regime_def.technical_takeaways %}
+                      {% set low = item|lower %}
+                      <li class="flex items-start gap-2">
+                        {% if "bullish" in low %}
+                        <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-900/50 text-emerald-400 shrink-0 mt-0.5 border border-emerald-800">BULL</span>
+                        {% elif "bearish" in low %}
+                        <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-red-900/50 text-red-400 shrink-0 mt-0.5 border border-red-800">BEAR</span>
+                        {% else %}
+                        <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-slate-700 text-slate-300 shrink-0 mt-0.5 border border-slate-600">NEUT</span>
+                        {% endif %}
+                        <span class="text-slate-300 leading-snug">{{ item }}</span>
+                      </li>
+                      {% endfor %}
+                    </ul>
+                    {% else %}
+                    <span class="text-slate-500 italic">N/A</span>
+                    {% endif %}
+                  </td>
+                  <td class="px-6 py-4 align-top text-xs text-slate-400">
+                    {% if regime_def and regime_def.technical_reason_bullets %}
+                    <ul class="list-disc list-inside space-y-1 ml-1 marker:text-slate-600">
+                      {% for item in regime_def.technical_reason_bullets %}
+                      <li class="leading-relaxed">{{ item }}</li>
+                      {% endfor %}
+                    </ul>
+                    {% else %}
+                    <span class="italic">{{ regime_def.technical_reason if regime_def and regime_def.technical_reason else "N/A" }}</span>
+                    {% endif %}
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
+
+      <!-- Footer Metadata -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between text-xs text-slate-500 font-medium bg-slate-800/40 border border-slate-800 rounded-lg px-4 py-3 mb-10">
+        <div class="flex flex-col sm:flex-row gap-2 sm:gap-6">
+          <span>Most likely regime: <strong class="text-slate-300">{{ payload.most_likely_regime }}</strong></span>
+          <span>Last update: <strong class="text-slate-300">{{ payload.last_data_update }}</strong></span>
+          <span>Generated: <strong class="text-slate-300">{{ payload.generated_at_utc }}</strong></span>
+        </div>
+        <a href="/status" class="mt-2 sm:mt-0 flex items-center gap-1 text-blue-400 hover:text-blue-300 transition-colors">
+          View full debug status &rarr;
+        </a>
+      </div>
+
+      <!-- Explainer Section -->
+      <div class="border-t border-slate-800 pt-10 pb-8">
+        <h3 class="text-2xl font-bold text-white mb-6">How the Model Works</h3>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-slate-400 text-sm leading-relaxed">
+          <div>
+            <h4 class="text-base font-bold text-slate-200 mb-2">1. The Symptoms (Technical Indicators)</h4>
+            <p class="mb-4">The "Technical Indicators" you see (RSI, Volatility, Trend Gap, Credit Spreads, <strong class="text-slate-300">Sentiment</strong>, <strong class="text-slate-300">Dollar</strong>) are the symptoms. The model looks at all of them at once as a single "health profile" for the day.</p>
+            
+            <h4 class="text-base font-bold text-slate-200 mb-2">2. The Diagnosis (Deciding the Regime)</h4>
+            <p class="mb-2">The "Regime" is the medical condition. The model has studied 15+ years of history and learned that the market usually exists in one of 3 states (clusters):</p>
+            <ul class="list-disc list-inside mb-4 ml-1 space-y-1 text-slate-400">
+              <li><strong class="text-slate-300">Regime 1:</strong> Historically defined by Low Volatility + Stable Trends + Normal Spreads.</li>
+              <li><strong class="text-slate-300">Regime 2:</strong> Historically defined by High Volatility + Spiking Spreads + Oversold RSI.</li>
+              <li><strong class="text-slate-300">Regime 3:</strong> Everything else (Choppy/Transition).</li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="text-base font-bold text-slate-200 mb-2">3. The Prognosis ("H5" = Next 5 Days)</h4>
+            <p class="mb-4">"H5" stands for the <strong class="text-slate-300">5-day forecast horizon</strong> (one trading week). The model predicts the probability of the price being higher or lower 5 days from now, capturing swing trends rather than daily noise.</p>
+            
+            <h4 class="text-base font-bold text-slate-200 mb-2">4. The Ensemble Consensus</h4>
+            <p class="mb-4">The HMM predicts by historical precedent. We train 10 slightly different versions of the model (like getting 10 second opinions). They average their predictions to reduce noise and make the signal stable.</p>
+            
+            <h4 class="text-base font-bold text-slate-200 mb-2">Why is this better than basic RSI?</h4>
+            <p>A simple rule says: "If RSI > 70, Sell." The HMM says: "If RSI > 70 <strong class="text-slate-300">BUT</strong> Volatility is Low and Spreads are Tight, that's actually a strong uptrend, so Buy." It captures the context that a single indicator misses.</p>
+          </div>
+        </div>
+      </div>
+
     {% else %}
-      <p>No daily probabilities found yet. Run <code>bash scripts/run_pipeline.sh</code>.</p>
+      <div class="bg-slate-800/50 rounded-2xl shadow-sm border border-slate-700 p-12 text-center">
+        <svg class="mx-auto h-12 w-12 text-slate-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+        <h3 class="text-lg font-medium text-white mb-2">No probability data found</h3>
+        <p class="text-slate-400 mb-6">The pipeline needs to be run to generate the latest predictions.</p>
+        <code class="bg-[#0b1120] text-slate-300 px-4 py-2 rounded-lg text-sm font-mono border border-slate-700">bash scripts/run_pipeline.sh</code>
+      </div>
     {% endif %}
-  </div>
+
+  </main>
 </body>
 </html>
