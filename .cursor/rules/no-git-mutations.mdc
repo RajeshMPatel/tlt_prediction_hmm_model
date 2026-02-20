@@ -1,0 +1,34 @@
+---
+description: Strictly forbids the AI from executing any mutating Git commands
+alwaysApply: true
+---
+
+# No Automated Git Mutations
+
+You are **STRICTLY FORBIDDEN** from running any `git` commands in the terminal that modify the repository state or configuration. The user explicitly requires manual verification of all Git operations because automated changes are not always correct.
+
+## Forbidden Commands
+You must **NEVER** use the Shell tool to run commands such as:
+- `git add`
+- `git rm`
+- `git commit`
+- `git reset`
+- `git push`
+- `git pull`
+- `git checkout` / `git switch`
+- `git branch`
+- `git merge` / `git rebase`
+- `git config`
+
+## Allowed Commands
+You may only run safe, read-only Git commands to gather context, such as:
+- `git status`
+- `git diff`
+- `git log`
+- `git show`
+
+## Required Behavior
+When the user asks to perform a Git operation (e.g., "remove data and reports from my git", "commit my changes", "add this to github"):
+1. **DO NOT** execute it for them.
+2. **DO** provide the exact terminal commands inside a Markdown code block (` ```bash `) so the user can review them and run them manually.
+3. Explain briefly what the commands will do.
