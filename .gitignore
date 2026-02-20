@@ -1,3 +1,19 @@
 *__pycache__*
 *.pyc
 
+# Virtual Environments
+.venv/
+venv/
+env/
+.env
+
+# Data
+data/raw/
+data/processed/
+
+# Reports
+reports/charts/
+reports/daily/
+
+# OS Files
+.DS_Store
