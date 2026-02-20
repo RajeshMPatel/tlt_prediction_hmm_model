@@ -7,11 +7,19 @@ By analyzing macroeconomic data, technical indicators, and historical volatility
 ## What It Does
 
 1. **Automated Data Ingestion**: Downloads daily market data (TLT, VIX, SPY, DXY) directly from Yahoo Finance and macroeconomic data (Treasury Yields, Inflation Expectations, Credit Spreads) from the St. Louis Fed (FRED).
-2. **Feature Engineering**: Calculates sophisticated technical indicators including Multi-timeframe Volatility, RSI, Trend Gaps, Synthetic Fear & Greed, and Real Yields.
+2. **Feature Engineering**: Calculates sophisticated technical and macroeconomic indicators to feed the model (detailed below).
 3. **Ensemble HMM Regime Detection**: Trains an ensemble of 10 Gaussian Hidden Markov Models to classify the current market environment into distinct Regimes.
 4. **Directional Forecasting**: Calculates the historical probability of TLT and VIX moving UP over the next 5 trading days based on the current regime.
 5. **Actionable Signals**: Translates probabilities into plain-English trading signals (`STRONG`, `MODERATE`, `SKIP`) by backtesting against historical "confidence buckets" to ensure the edge is statistically significant.
 6. **Web Dashboard**: Serves all predictions, backtest results, and regime charts via a sleek local FastAPI web interface.
+
+### Technical & Macro Signals Used
+The model does not just look at price; it looks at a wide array of cross-asset relationships to understand the market context:
+- **Multi-timeframe Volatility**: Realized volatility over 5d, 20d, and 60d to detect whether turbulence is accelerating or decelerating.
+- **Trend & Momentum**: RSI (Relative Strength Index), 5d/20d rate of change, and position relative to 20d moving averages and price channels.
+- **Synthetic Fear & Greed**: A custom 0-100 sentiment score blending VIX levels, SPY momentum, and Credit Spreads to identify market extremes.
+- **Real Yields**: The most critical driver of bond prices (Nominal 10Y Yield minus 10Y Inflation Expectations).
+- **Macro Context**: DXY (US Dollar) returns, 10Y-2Y Yield Curve Slope, High Yield Credit Spreads (BAMLH0A0HYM2), and Stock/Bond (SPY/TLT) 60-day rolling correlation.
 
 ## How It Works
 
