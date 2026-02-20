@@ -17,3 +17,5 @@ reports/daily/
 
 # OS Files
 .DS_Store
+data/
+reports/
